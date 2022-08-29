@@ -1,0 +1,7 @@
+{
+  "name": "quiz-timer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
