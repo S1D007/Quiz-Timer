@@ -1,51 +1,56 @@
-import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonText, IonImg } from '@ionic/react'
-import React,{useState} from 'react';
-import {app} from "../config/firebase";
-import { getAuth, createUserWithEmailAndPassword,signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage } from '@ionic/react'
+import React, { useLayoutEffect, useState,createContext } from 'react';
+import { getAuth, createUserWithEmailAndPassword, } from "firebase/auth";
 // import LoginAnim from "../components/Images/loginGIF.gif";
-import logoGoogle from "../components/Images/logo-google.svg"
 import Back from "../components/Images/chevron-back-outline.svg"
-function Login({history}) {
-    const [email,setEmail] = useState("")
-    const [pass,setPass] = useState("")
-    const [cPass,setCPass] = useState("")
+import { Storage } from '@ionic/storage';
+export const EmailContext = createContext()
+function Login({ history }) {
+    const [email, setEmail] = useState("")
+    const [pass, setPass] = useState("")
+    const [cPass, setCPass] = useState("")
     const auth = getAuth();
-    const provider = new GoogleAuthProvider()
-    const onSignin = () =>{
-        createUserWithEmailAndPassword(auth, email, pass).then(()=>{
+    const storage = new Storage();
+    storage.create();
+    const onSignin = () => {
+        createUserWithEmailAndPassword(auth, email, pass).then(() => {
             alert("Done Succesfully")
-        }).catch((e)=>{
+            storage.set("signup",true)
+            history.push("/profile")
+        }).catch((e) => {
             alert(e.message)
         })
     }
-    const onGoogleSignup = () =>{
-signInWithPopup(auth,provider).then((e)=>{
-    console.log(e)
-}).catch((e)=>{
-    alert(e.message)
-})
+    const store = async()=>{
+        const check = await storage.get("signup");
+        if (check) {
+            history.push("/profile")
+        }
     }
+    useLayoutEffect(()=>{
+        store()
+    },[])
     return (
-        <IonContent style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
+        <IonPage style={{
+            backgroundColor: "#0D1117",
+            color:"white"
         }} >
             <IonText>
-            
+
                 <h1 style={{
                     fontWeight: "bold",
                     margin: "5%",
                     fontSize: "2rem",
                     fontFamily: "sans-serif",
-                    // marginTop:"-5px"
-                }} ><IonIcon  src={Back} onClick={()=>{
+                    color:"white"
+                }} ><IonIcon src={Back} onClick={() => {
                     history.go(-1)
                 }} alt="Logo" style={{
-                    // paddingTop:"4rem"
-                    display:"inline-block"
-                }} />Signup</h1>
+                    display: "inline-block",
+                    color:"white"
+                }} /></h1>
             </IonText>
+            
             <div style={{
                 display: "flex",
                 justifyContent: "center",
@@ -57,83 +62,87 @@ signInWithPopup(auth,provider).then((e)=>{
                             fontWeight: "lighter",
                             color: "#818181",
                             fontFamily: "monospace",
-                            fontSize: "1rem",
+                            fontSize: "1.2rem",
                             marginBottom: "2rem",
                             textAlign: "center"
                         }
                     } >
                         Great To See You Champ!
                         <br />
-                        Why Dont you Create an Account
+                        Why Dont you Create an Account?
                     </h4>
                 </IonText>
             </div>
+            
+            <div style={{
+            }} >
+                <div style={{
+                    margin: "5%",
+                    maxWidth: "1000px",
+                }} >
+                    <IonLabel >
+                        <h2 style={{
+                            fontWeight: "bold",
+                            margin: "5%",
+                            color:"white",
+                            fontSize:"1.2rem"
+                        }} >Email</h2>
+                    </IonLabel>
+                    <EmailContext.Provider value={email}>
+                    <IonInput onIonChange={(e) => setEmail(e.target.value)} style={{
+                        border: "3px solid #818181",
+                        borderRadius: "1.2rem",
+                        marginBottom: "1.8rem",
+                        padding: "1rem",
+                        color:"white",
+                        fontSize:"1rem"
+
+                    }} type="text" placeholder="foo@bar.com" />
+                    </EmailContext.Provider>
+                    <IonLabel>
+                        <h2 style={{
+                            fontWeight: "bold",
+                            margin: "5%",
+                            color:"white",
+                            fontSize:"1.2rem"
+
+                        }} >Password</h2>
+                    </IonLabel>
+                    <IonInput onIonChange={(e) =>
+                        setPass(e.target.value)} style={{
+                            border: "3px solid #818181",
+                            borderRadius: "1.2rem",
+                            padding: "1rem",
+                            color:"white",
+                            fontSize:"1rem"
+                        }} type="password" placeholder="Do*@****" />
+                    <IonLabel>
+                        <h2 style={{
+                            fontWeight: "bold",
+                            margin: "5%",
+                            fontSize:"1.2rem"
+                        }} >Confirm Password</h2>
+                    </IonLabel>
+                    <IonInput onIonChange={(e) =>
+                        setCPass(e.target.value)} style={{
+                            border: "3px solid #818181",
+                            borderRadius: "1.2rem",
+                            padding: "1rem",
+                            color:"white",
+                            fontSize:"1rem"
+                        }} type="password" placeholder="Do*@****" />
+                </div>
+            </div>
             <div style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop:"-1rem"
+                color:"white"
             }} >
-                <IonButton onClick={()=>{
-                    onGoogleSignup()
-                }} size='large' fill='outline' color={"medium"} >
-                    <h3 style={{ marginRight: "5px" }} >Signup with </h3>
-                    <IonIcon src={logoGoogle}></IonIcon>
-                </IonButton>
-            </div>
-            <div style={{
-            }} >
-            <div style={{
-                margin: "5%",
-                maxWidth:"1000px",
-            }} >
-                <IonLabel >
-                    <h2 style={{
-                        fontWeight: "bold",
-                        margin: "5%"
-                    }} >Email</h2>
-                </IonLabel>
-                <IonInput onIonChange={(e)=> setEmail(e.target.value)} style={{
-                    border: "3px solid #818181",
-                    borderRadius: "1.2rem",
-                    marginBottom: "1.8rem",
-                    padding: "1rem",
-                }} type="text" placeholder="foo@bar.com" />
-                <IonLabel>
-                    <h2 style={{
-                        fontWeight: "bold",
-                        margin: "5%"
-                    }} >Password</h2>
-                </IonLabel>
-                <IonInput onIonChange={(e)=>
-                    setPass(e.target.value)} style={{
-                    border: "3px solid #818181",
-                    borderRadius: "1.2rem",
-                    padding: "1rem",
-                }} type="password" placeholder="Do*@****" />
-                <IonLabel>
-                    <h2 style={{
-                        fontWeight: "bold",
-                        margin: "5%"
-                    }} >Confirm Password</h2>
-                </IonLabel>
-                <IonInput onIonChange={(e)=>
-                    setCPass(e.target.value)}  style={{
-                    border: "3px solid #818181",
-                    borderRadius: "1.2rem",
-                    padding: "1rem",
-                }} type="password" placeholder="Do*@****" />
-            </div>
-            </div>
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }} >
-                <IonButton onClick={()=>{
-                    if(cPass !== pass ){
+                <IonButton onClick={() => {
+                    if (cPass !== pass) {
                         alert("Password Does not Match ")
-                    }else{
+                    } else {
                         onSignin()
                     }
                 }} color={"tertiary"} size='large' >
@@ -141,29 +150,33 @@ signInWithPopup(auth,provider).then((e)=>{
                         fontFamily: "sans-serif",
                         fontWeight: "bold",
                         padding: "6rem",
+                        color:"white"
                     }} >Signup</h1>
                 </IonButton>
             </div>
             <div style={{
                 display: "flex",
                 justifyContent: "center",
+                marginBottom: "5pt"
 
             }} >
                 <h6 style={{
                     fontWeight: "lighter",
+                    color:"white"
                 }} >
                     Already have an account?
                     <span style={{
-                        fontWeight: "bold",
-                        padding: "5px"
-                    }} onClick={()=>{
+                          fontWeight: "bold",
+                        padding: "5px",
+                        color: "white"
+                    }} onClick={() => {
                         history.push('/login');
                     }} >
                         Login
                     </span>
                 </h6>
             </div>
-        </IonContent>
+        </IonPage>
     )
 }
 

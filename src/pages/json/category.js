@@ -1,22 +1,22 @@
 export const category = [
     {
-        name:"Maths",
-        questions:15,
-        img:"https://cdn3d.iconscout.com/3d/premium/thumb/maths-calss-4147331-3436374@0.png"
+      id: 1,
+      name: 'Maths',
     },
     {
-        name:"Science",
-        questions:13,
-        img:"https://cdn.iconscout.com/icon/free/png-256/science-research-medical-laboratory-chemistry-physics-1-29736.png"
+      id: 2,
+      name: 'Science',
     },
     {
-        name:"GK",
-        questions:17,
-        img:"https://cdn.iconscout.com/icon/premium/png-256-thumb/creative-book-4138667-3437315.png"
+      id: 3,
+      name: 'English',
     },
     {
-        name:"Sports",
-        questions:12,
-        img:"https://cdn.iconscout.com/icon/premium/png-256-thumb/sports-2631488-2179552.png"
-    }
-]
+      id: 4,
+      name: 'Sports',
+    },
+    {
+      id: 5,
+      name: 'Computer',
+    },
+  ];

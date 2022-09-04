@@ -1,4 +1,4 @@
-/* Ionic Variables and Theming. For more info, please see:
+/* /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 /* ./src/theme/tailwind.css */
@@ -129,7 +129,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-danger-shade: #e04055;
     --ion-color-danger-tint: #ff5b71;
 
-    --ion-color-dark: #f4f5f8;
+    --ion-color-dark: #0D1117;
     --ion-color-dark-rgb: 244,245,248;
     --ion-color-dark-contrast: #000000;
     --ion-color-dark-contrast-rgb: 0,0,0;
@@ -183,7 +183,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-900: #e6e6e6;
     --ion-color-step-950: #f2f2f2;
 
-    --ion-item-background: #000000;
+    --ion-item-background: #0D1117;
 
     --ion-card-background: #1c1c1d;
   }
@@ -201,7 +201,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .md body {
-    --ion-background-color: #121212;
+    --ion-background-color: #0D1117;
     --ion-background-color-rgb: 18,18,18;
 
     --ion-text-color: #ffffff;
@@ -229,7 +229,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-900: #e7e7e7;
     --ion-color-step-950: #f3f3f3;
 
-    --ion-item-background: #1e1e1e;
+    --ion-item-background: #0D1117;
 
     --ion-toolbar-background: #1f1f1f;
 
@@ -237,4 +237,9 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: #1e1e1e;
   }
+}
+.IonItem{
+  /* --ion-item-background: white !important; */
+}
+@media (max-height: 680px) {
 }

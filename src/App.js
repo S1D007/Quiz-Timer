@@ -19,19 +19,24 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+// pages
 import OnBoarding from './components/OnBoarding';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
+import Profile from './pages/Profile'
 setupIonicReact();
 const App = () => {
+
+  // console.log(props.e);
   return <IonReactRouter>
   <IonApp>
     <IonRouterOutlet>
     <Route exact path={"/"} component={OnBoarding}  />
-    <Route exact path={"/login"} component={Login}  />
     <Route exact path={"/signup"} component={Signup}  />
+    <Route exact path={"/login"} component={Login}  />
     <Route exact path={"/home"} component={Home}  />
+    <Route exact path={"/profile"} component={Profile}  />
     </IonRouterOutlet>
   </IonApp>
   </IonReactRouter>

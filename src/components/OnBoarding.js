@@ -5,6 +5,7 @@ import { IonSlides, IonSlide, IonContent, IonImg, IonButton, IonText, IonPage } 
 import onBoarding1 from "./Images/onBoarding1.svg"
 import onBoarding2 from "./Images/onBoarding2.svg"
 import onBoarding3 from "./Images/onBoarding3.svg"
+import App from '../App';
 // Optional parameters to pass to the swiper instance.
 // See https://swiperjs.com/swiper-api for valid options.
 const slideOpts = {
@@ -83,69 +84,63 @@ const slideOpts = {
     }
 };
 
-const OnBoarding = () => {
-    const [onBoardingHasEndedInformation, setonBoardingHasEndedInformation] = useState(null)
-    const onClickHanddler = async () => {
-        const storage = new Storage();
-        await storage.create();
-        await storage.set("onBoardingHasEnded", true)
-        const onBoardingHasEnded = await storage.get("onBoardingHasEnded");
-        if (onBoardingHasEnded === true) {
-            setonBoardingHasEndedInformation(true)
-        } else {
-            setonBoardingHasEndedInformation(false)
+const OnBoarding = ({ history }) => {
+    const storage = new Storage();
+    storage.create();
+    const onClickHanddler = async()=>{
+        await storage.set("OnBoardingEnded",true)
+        history.push("/login")
+    }
+    const store = async()=>{
+        const check = await storage.get("OnBoardingEnded");
+        if (check) {
+            history.push("/login")
         }
     }
-    useLayoutEffect(() => {
-        //  onClickHanddler()   
-    }, [])
-    // Testing
-    // const func = async () => {
-    //     const storage = new Storage();
-    //     await storage.create();
-    //     const onBoardingHasEnded = await storage.get("onBoardingHasEnded");
-    //     console.log(onBoardingHasEnded);
-    // }
-    // func()
-    return onBoardingHasEndedInformation === true ? <Redirect from='/' to="/login" /> : (
-            <IonPage style={{
-                height:"250vw",
-                maxHeight: '300vw',
-                margin:"0 auto",
-                marginTop: '10vh'
-            }} >
-        <IonContent style={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-        }} >
-                <IonSlides className='' pager={true} style={{
-                    margin: "0.8rem",
-                    padding: "0.8rem",
+    useLayoutEffect(()=>{
+        store()
+    },[])
 
+    return (
+        <IonPage style={{
+            backgroundColor: "#0D1117"
+        }} >
+            <div style={{
+                // marginTop: "20vw"
+            }} >
+                <IonSlides className='' pager={true} style={{
+                    margin: "0.1rem",
+                    padding: "2rem",
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop:"20pt"
                     // display: "flex",
                 }} options={slideOpts}>
                     <IonSlide style={{
                         display: "block",
+                        justifyContent: "center"
                     }} >
                         <IonImg style={{
                             height: "15rem",
                             maxWidth: "20rem",
-                            marginTop: "0.5rem"
+                            marginTop: "2rem",
+                            marginBottom:"1.5rem "
                         }} src={onBoarding1} />
-                        <h1 style={{
-                            fontSize: "2.5rem",
+                        <IonText color={"secondary"} style={{
+                            // color:"white",
+                            fontSize: "10vw",
                             fontWeight: "bold",
-                            marginTop: "4rem",
-                            marginBottom: "1.5rem"
+                            // marginTop: "50pt",
+                            // marginBottom: "1.5rem"
                         }} >Test Your Knowledge <span
                             style={{
-                                fontSize: "1rem",
+                                fontSize: "1.2rem",
                                 color: "#A4BBF1",
                                 marginTop: "1.5rem",
                                 display: "inline-block",
                                 fonrWeight: "light"
                             }}
-                        >There are hundreds of Category to Choose From</span></h1>
+                        >There are hundreds of Category to Choose From</span></IonText>
                     </IonSlide>
                     <IonSlide style={{
                         display: "block"
@@ -153,10 +148,12 @@ const OnBoarding = () => {
                         <IonImg style={{
                             height: "15rem",
                             maxWidth: "20rem",
-                            marginTop: "1.5rem"
+                            marginTop: "2rem",
+                            marginBottom:"1.5rem"
                         }} src={onBoarding2} />
-                        <h1 style={{
-                            fontSize: "2.5rem",
+                        <IonText color={"warning"} style={{
+                            // color:"white",
+                            fontSize: "10vw",
                             fontWeight: "bold",
                             marginTop: "2rem",
                             marginBottom: "1.5rem",
@@ -165,10 +162,10 @@ const OnBoarding = () => {
                             marginTop: "2rem",
                             display: "inline-block",
                             fonrWeight: "light",
-                            fontSize: "1rem"
+                            fontSize: "5vw",
                         }}>
                                 In-Game Coins are So Usefull While You play Games
-                            </span> </h1>
+                            </span> </IonText>
                     </IonSlide>
                     <IonSlide style={{
                         display: "block"
@@ -176,34 +173,41 @@ const OnBoarding = () => {
                         <IonImg style={{
                             height: "15rem",
                             maxWidth: "20rem",
-                            marginTop: "1.5rem"
+                            marginTop: "1rem",
+                            marginBottom:"1.5rem "
                         }} src={onBoarding3} />
-                        <h1 style={{
-                            fontSize: "2rem",
+                        <IonText color={"success"} style={{
+                            // color:"white",
+                            fontSize: "8vw",
                             fontWeight: "bold",
-                            marginTop: "60px",
                             marginBottom: "30px"
                         }} >Play the Most Loving Quiz Game<span style={{
-                            display: "inline-block",
+                            display: "block",
                             backgroundColor: "#C9FFB6",
                             color: "black",
                             borderRadius: "40px",
-                            padding: "10px",
+                            padding: "2vw",
                             // marginTop:"10px",
                             fontFamily: "Roboto",
                             fontSize: "50px",
                             fontWeight: "bold"
                         }}>Quiz Timer</span>
-                            <IonButton onClick={onClickHanddler} color={"success"} >
+                            <IonButton style={{
+                                marginTop: "50px",
+                                marginBottom: "50pt"
+                            }} size='large' onClick={onClickHanddler} color={"success"} >
                                 <IonText>
-                                    <h3>Woohoo!</h3>
+                                    <h3 style={{
+                                        color: "black",
+                                        padding: "50pt",
+                                    }} >Woohoo!</h3>
                                 </IonText>
                             </IonButton>
-                        </h1>
+                        </IonText>
                     </IonSlide>
                 </IonSlides>
-        </IonContent>
-            </IonPage>
+            </div>
+        </IonPage>
     )
 };
 

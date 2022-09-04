@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: '.',
+  appName: 'Quiz Timer',
   webDir: 'build',
   bundledWebRuntime: false
 };
