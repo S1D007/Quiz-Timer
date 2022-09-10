@@ -1,20 +1,27 @@
-import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage } from '@ionic/react'
+import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage, useIonLoading } from '@ionic/react'
 import React, { useLayoutEffect, useState,createContext } from 'react';
 import { getAuth, createUserWithEmailAndPassword, } from "firebase/auth";
 // import LoginAnim from "../components/Images/loginGIF.gif";
 import Back from "../components/Images/chevron-back-outline.svg"
 import { Storage } from '@ionic/storage';
+
 export const EmailContext = createContext()
 function Login({ history }) {
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
     const [cPass, setCPass] = useState("")
+    const [present, dismiss] = useIonLoading();
     const auth = getAuth();
     const storage = new Storage();
     storage.create();
     const onSignin = () => {
+        !email&&!pass&&!cPass?alert("Feilds are Required!"):
+        present({
+            message: 'Loading...',
+            duration: 1000,
+            spinner: 'circles'
+          })
         createUserWithEmailAndPassword(auth, email, pass).then(() => {
-            alert("Done Succesfully")
             storage.set("signup",true)
             history.push("/profile")
         }).catch((e) => {
@@ -170,7 +177,7 @@ function Login({ history }) {
                         padding: "5px",
                         color: "white"
                     }} onClick={() => {
-                        history.push('/login');
+                        history.push("/login")
                     }} >
                         Login
                     </span>

@@ -1,4 +1,4 @@
-export const category = [
+export let category = [
     {
       id: 1,
       name: 'Maths',

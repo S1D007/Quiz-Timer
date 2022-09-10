@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Storage } from "@ionic/storage";
 import { Redirect } from 'react-router-dom';
-import { IonSlides, IonSlide, IonContent, IonImg, IonButton, IonText, IonPage } from '@ionic/react';
+import { IonSlides, IonSlide, IonContent, IonImg, IonButton, IonText, IonPage, useIonLoading, IonRouterOutlet } from '@ionic/react';
 import onBoarding1 from "./Images/onBoarding1.svg"
 import onBoarding2 from "./Images/onBoarding2.svg"
 import onBoarding3 from "./Images/onBoarding3.svg"
@@ -91,18 +91,27 @@ const OnBoarding = ({ history }) => {
         await storage.set("OnBoardingEnded",true)
         history.push("/login")
     }
+    const [present, dismiss] = useIonLoading();
+
     const store = async()=>{
-        const check = await storage.get("OnBoardingEnded");
-        if (check) {
-            history.push("/login")
+        present({
+            message: `Loading ....`,
+            duration: 100,
+            spinner: 'circles',
+            animated:true,
+            cssClass:"loader",
+          })
+        const check2 = await storage.get("login");
+        if (check2) {
+            history.push("/home")
         }
     }
     useLayoutEffect(()=>{
         store()
     },[])
 
-    return (
-        <IonPage style={{
+    return  (
+        <IonRouterOutlet  style={{
             backgroundColor: "#0D1117"
         }} >
             <div style={{
@@ -207,7 +216,7 @@ const OnBoarding = ({ history }) => {
                     </IonSlide>
                 </IonSlides>
             </div>
-        </IonPage>
+        </IonRouterOutlet>
     )
 };
 

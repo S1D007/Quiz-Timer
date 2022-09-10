@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { AppProvider } from './components/Functions/context';
+import { EmailProvider } from './components/Functions/context';
 
 ReactDOM.render(
-  <AppProvider>
+  <EmailProvider>
   <React.StrictMode>
     <App />
   </React.StrictMode>
-  </AppProvider>,
+  </EmailProvider>,  
   document.getElementById('root')
 );

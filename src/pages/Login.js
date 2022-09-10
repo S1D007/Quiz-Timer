@@ -1,20 +1,26 @@
-import { IonButton,IonInput,IonLabel, IonText, IonImg, IonPage } from '@ionic/react'
+import { IonButton,IonInput,IonLabel, IonText, IonImg, IonPage, useIonLoading } from '@ionic/react'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Storage } from "@ionic/storage"
 import {app} from "../config/firebase"
+
 import React, { useLayoutEffect, useState } from 'react';
 import Welcome from "../components/Images/welcome.gif"
 
 function Login({ history }) {
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
+    const [present, dismiss] = useIonLoading();
     const auth = getAuth();
     const storage = new Storage();
     storage.create();
     const onLogin = () => {
-        !email && pass?alert("Enter Your Credientials"):
+        !email && !pass?alert("Enter Your Credientials"):
+        present({
+            message: 'Loading...',
+            duration: 1000,
+            spinner: 'circles'
+          })
         signInWithEmailAndPassword(auth, email, pass).then(() => {
-            alert("Done Succesfully");
             storage.set("login",true)
             history.push("/home");
         }).catch((e) => {
@@ -29,7 +35,7 @@ function Login({ history }) {
     }
     useLayoutEffect(()=>{
         store()
-    },[])
+    },[])    
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",

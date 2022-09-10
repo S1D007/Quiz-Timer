@@ -23,23 +23,51 @@ import './theme/variables.css';
 import OnBoarding from './components/OnBoarding';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Home from './pages/Home';
+import HomeScreen from './pages/HomeScreen';
+// import Home from './pages/Home';
 import Profile from './pages/Profile'
+import UpdateProfile from './pages/UpdateProfile'
+import Quiz from './pages/Quiz'
+import { useEffect, useState } from 'react';
+import { Storage } from '@ionic/storage';
 setupIonicReact();
 const App = () => {
-
-  // console.log(props.e);
-  return <IonReactRouter>
-  <IonApp>
-    <IonRouterOutlet>
-    <Route exact path={"/"} component={OnBoarding}  />
+  const [launched,setlaunched] = useState(false)
+  const [board,setBoard] = useState()
+  const launchedInfo = async ()=>{
+    const store = new Storage();
+    await store.create();
+    const profile = await store.get("profile")
+    const login = await store.get("login")
+    const onBoaard = await store.get("onBoaardingEnded")
+    if(onBoaard){
+      setBoard(false)
+    }else{
+      setBoard(true)
+    }
+    if(profile||login) {
+      setlaunched(true)
+    }else{
+      setlaunched(false)
+    }
+  }
+  useEffect(()=>{
+    launchedInfo()
+  })
+  return (
+  <IonReactRouter>
+<IonApp>
+    <Route exact path={"/"} component={board === false ? null:OnBoarding}  />
     <Route exact path={"/signup"} component={Signup}  />
     <Route exact path={"/login"} component={Login}  />
-    <Route exact path={"/home"} component={Home}  />
+    <Route id={"home"} exact path={"/home"} component={HomeScreen}  />
     <Route exact path={"/profile"} component={Profile}  />
-    </IonRouterOutlet>
+    <Route exact path={"/quizScreen"} component={Quiz}  />
+    <Route exact path={"/updateProfile"} component={UpdateProfile}  />
   </IonApp>
   </IonReactRouter>
+  )
+
 };
 
 export default App;
