@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import {getFirestore} from "firebase/firestore"
 const firebaseConfig = {
   apiKey: "AIzaSyCQ4gKdIjHd29Njno-gPhqqBuyE-5YxYeE",
   authDomain: "quiz-timer-ce42a.firebaseapp.com",
@@ -12,3 +13,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app)

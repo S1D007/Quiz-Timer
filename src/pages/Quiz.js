@@ -149,9 +149,9 @@ function Quiz() {
                     <div style={{
                         margin:"5%"
                     }} >
-                        <h4 style={{
+                        <h3 style={{
                             fontWeight:"bold"
-                        }} >Why Javascript is So Popular ?</h4>
+                        }} >Why Javascript is So Popular ?</h3>
                         <div style={{
                             display:"table-row",
                             justifyContent:"space-between",
@@ -165,10 +165,10 @@ function Quiz() {
                                 }} >
                                 <h4 style={{
                                         background: "#D4D4D4",
-                                        paddingLeft:"10px",
-                                        paddingRight:"10px",
-                                        paddingTop:"5px",
-                                        paddingBottom:"2.5px",
+                                        paddingLeft:"15px",
+                                        paddingRight:"15px",
+                                        paddingTop:"10px",
+                                        paddingBottom:"7px",
                                         borderRadius: "50px",
                                         backgroundColor:e !== 1? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%);":"lightblue",
                                     }} >{i+1}</h4>
@@ -179,9 +179,9 @@ function Quiz() {
                                         alignContent:"center",
                                         alignItems:"center"
                                     }} >
-                                    <h4 style={{
+                                    <h5 style={{
                                         fontFamily:"Roboto"
-                                    }} >{e}</h4>
+                                    }} >{e}</h5>
                                     </div>
                                 </div>
                             })}

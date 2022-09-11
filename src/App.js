@@ -32,32 +32,10 @@ import { useEffect, useState } from 'react';
 import { Storage } from '@ionic/storage';
 setupIonicReact();
 const App = () => {
-  const [launched,setlaunched] = useState(false)
-  const [board,setBoard] = useState()
-  const launchedInfo = async ()=>{
-    const store = new Storage();
-    await store.create();
-    const profile = await store.get("profile")
-    const login = await store.get("login")
-    const onBoaard = await store.get("onBoaardingEnded")
-    if(onBoaard){
-      setBoard(false)
-    }else{
-      setBoard(true)
-    }
-    if(profile||login) {
-      setlaunched(true)
-    }else{
-      setlaunched(false)
-    }
-  }
-  useEffect(()=>{
-    launchedInfo()
-  })
   return (
   <IonReactRouter>
 <IonApp>
-    <Route exact path={"/"} component={board === false ? null:OnBoarding}  />
+    <Route exact path={"/"} component={OnBoarding}  />
     <Route exact path={"/signup"} component={Signup}  />
     <Route exact path={"/login"} component={Login}  />
     <Route id={"home"} exact path={"/home"} component={HomeScreen}  />

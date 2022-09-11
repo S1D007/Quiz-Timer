@@ -1,9 +1,11 @@
-import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg } from '@ionic/react';
+import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg, IonApp } from '@ionic/react';
 import { call, man } from "ionicons/icons"
 import React, { useEffect, useLayoutEffect, useState, } from 'react'
 import ProfileImg from "../components/Images/profile.gif"
 import { EmailContext } from '../components/Functions/context';
 import { Storage } from '@ionic/storage';
+import {db} from "../config/firebase"
+import {collection, addDoc, Timestamp} from 'firebase/firestore'
 // import {category} from "./json/category"
 let category = [
   {
@@ -40,12 +42,26 @@ const compareWith = (o1, o2) => {
 };
 const Profile = ({ history }) => {
   const [currentCategory, setCurrentCategory] = useState([]);
+  const [phone,setPhone] = useState(null)
+  const [name,setName] = useState(null)
   const email = React.useContext(EmailContext)
   const onClickHanddler = async () => {
     const store = new Storage();
     await store.create();
-    await store.set("profile",true)
-    history.replace("/login")
+    try {
+      await addDoc(collection(db, 'users'), {
+        cattegories:currentCategory,
+        email:email,
+        phone:phone,
+        name:name,
+        coins:100,
+        created: Timestamp.now()
+      })
+    } catch (err) {
+      alert(err)
+    }
+    // await store.set("profile",true)
+    // history.replace("/login")
   }
 
   // useLayoutEffect(()=>{
@@ -57,6 +73,11 @@ const Profile = ({ history }) => {
       padding: "5%",
       color: "black"
     }} >
+    <IonApp class='profile' style={{
+      backgroundColor: "#fff",
+      padding: "5%",
+      color: "black"
+    }}  >
       <div  >
         <div >
           <IonText style={{
@@ -79,7 +100,7 @@ const Profile = ({ history }) => {
 
         </div>
         <div>
-          <IonInput style={{
+          <IonInput value={name} onIonChange={(e)=>setName(e.target.value)} style={{
             border: "2px solid #2f2f2f",
             color: "black",
             padding: "1rem",
@@ -96,7 +117,7 @@ const Profile = ({ history }) => {
             </IonItem>
           </IonInput>
 
-          <IonInput style={{
+          <IonInput value={phone} onIonChange={(e)=>setPhone(e.target.value)} style={{
             border: "2px solid #2f2f2f",
             color: "black",
             padding: "1rem",
@@ -176,6 +197,7 @@ const Profile = ({ history }) => {
           }} >lets Go</h1>
         </IonButton>
       </div>
+      </IonApp>
     </IonPage>
   )
 }

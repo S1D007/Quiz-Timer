@@ -50,7 +50,7 @@ function HomeScreen({history}) {
           // bottom:"500",
           left: 20
         }} >
-          <IonIcon onClick={()=>alert("Hello World")} size='large' color='#fff' icon={menu} >
+          <IonIcon onClick={()=>history.push("/updateProfile")} size='large' color='#fff' icon={menu} >
           </IonIcon>
           <IonMenu contentId='home' side='start' >
 
