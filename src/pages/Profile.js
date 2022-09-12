@@ -1,5 +1,5 @@
 import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg, IonApp } from '@ionic/react';
-import { call, man } from "ionicons/icons"
+import { call, man,mail } from "ionicons/icons"
 import React, { useEffect, useLayoutEffect, useState, } from 'react'
 import ProfileImg from "../components/Images/profile.gif"
 import { EmailContext } from '../components/Functions/context';
@@ -60,8 +60,8 @@ const Profile = ({ history }) => {
     } catch (err) {
       alert(err)
     }
-    // await store.set("profile",true)
-    // history.replace("/login")
+    await store.set("profile",true)
+    history.replace("/login")
   }
 
   // useLayoutEffect(()=>{
@@ -126,7 +126,7 @@ const Profile = ({ history }) => {
             boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
           }} type="number" placeholder="Enter Your 10 Digit Phone Number" >
             <IonItem slot='start' style={{
-              backgroundColor: "#0D1117"
+              backgroundColor: "#fff"
             }} position='floating' >
               <IonIcon icon={call} />
             </IonItem>
@@ -137,11 +137,17 @@ const Profile = ({ history }) => {
             border: "2px solid #2f2f2f",
             color: "black",
             padding: "1rem",
-            borderRadius: "10px",
-            marginBottom: "10vw",
-            marginTop: "40px",
-            boxShadow: "rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px"
-          }} type="text" disabled={true} value={"Email: " + email} />
+            borderTopRightRadius: "10px",
+            borderBottomRightRadius: "10px",
+            marginTop:"20px",
+            boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"
+          }} type="text" disabled={true} value={email} >
+            <IonItem slot='start' style={{
+              backgroundColor: "#0D1117"
+            }} position='floating' >
+              <IonIcon icon={mail} />
+            </IonItem>
+          </IonInput>
         </div>
         <div style={{
           marginTop: "5vw",

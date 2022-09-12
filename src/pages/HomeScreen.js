@@ -1,13 +1,26 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonList, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, IonText, IonTitle, IonToolbar } from '@ionic/react'
-import React, { useEffect, useState } from 'react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, IonSplitPane, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
 import { person } from "ionicons/icons"
-
-function HomeScreen({history}) {
-  const [numb,setNumber] = useState(1)
+import { collection, doc, getDocs, query, where } from 'firebase/firestore'
+import { db } from '../config/firebase'
+import { UserContext } from '../components/Functions/context';
+import { Route, Switch } from 'react-router'
+import { updateProfile } from 'firebase/auth'
+function HomeScreen({ history }) {
+  const [numb, setNumber] = useState(1)
+  const userDetails = React.useContext(UserContext)
+  const [coinVAl, setCoinVAL] = useState(100)
+  const [cat, setCat] = useState([])
+  useLayoutEffect(() => {
+    setCoinVAL(userDetails.coins)
+    setCat(userDetails.cattegories)
+  }, [userDetails])
+  // console.log(userDetails);
+  // console.log(cat[0]);
   return (
-    
+
     <IonPage style={{
       backgroundColor: "#0D1117",
       color: "white"
@@ -24,11 +37,15 @@ function HomeScreen({history}) {
           color: "#000",
           margin: "0 auto",
           // padding:"1%",
-          borderBottomLeftRadius: "20px",
-          borderBottomRightRadius: "20px",
+          borderRadius: "20px",
+          marginTop:"100px",
+          // borderBottomRightRadius: "20px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          position: "relative",
+          top: "-10px",
+          zIndex: -1
         }} >
           <IonImg style={{
             width: "50px",
@@ -42,37 +59,17 @@ function HomeScreen({history}) {
             fontSize: "1.5rem",
             fontWeight: "bold",
             fontFamily: "monospace",
-          }} >100</span>
+          }} >{coinVAl}</span>
         </div>
         <div style={{
           // display: "flex",
           position: "relative",
+          top: "35px",
           // bottom:"500",
           left: 20
         }} >
-          <IonIcon onClick={()=>history.push("/updateProfile")} size='large' color='#fff' icon={menu} >
-          </IonIcon>
-          <IonMenu contentId='home' side='start' >
 
-          </IonMenu>
         </div>
-        <div style={{
-          // display: "flex",
-          // justifyContent: "center",
-          // alignItems: "center"
-          textAlign: "center",
-          marginTop: "-10px"
-        }} >
-          <h1 style={{
-            fontSize: "3rem"
-          }} >Good Evening</h1>
-          <h2 style={{
-            marginTop: "-10px",
-            fontFamily: "monospace",
-            fontSize: "2rem"
-          }} >Siddhant</h2>
-        </div>
-        
         <div className='shadow' style={{
           position: "relative",
           backgroundColor: "#fff",
@@ -95,25 +92,35 @@ function HomeScreen({history}) {
             color: "#000"
           }} >
             <div style={{
-              marginTop: "-20px",
-              padding: "50px"
+              marginTop: "20px",
+              padding: "30px"
             }} >
-              <IonList>
+              <IonList style={{
+                borderRadius: "50px",
+
+              }} >
                 <IonItem>
                   <IonSelect interface="action-sheet" placeholder="Choose a Category">
-                    <IonSelectOption value="apples">Apples</IonSelectOption>
-                    <IonSelectOption value="oranges">Oranges</IonSelectOption>
-                    <IonSelectOption value="bananas">Bananas</IonSelectOption>
+                    {/* {
+                      userDetails.cattegories.map((e)=>{
+                        return <IonSelectOption value={e.value} >
+                          {e.name}
+                        </IonSelectOption>
+                      })
+                    } */}
                   </IonSelect>
                 </IonItem>
               </IonList>
             </div>
             <div style={{
-              padding:"50px",
-              marginTop:"-20px"
+              padding: "30px",
+              marginTop: "-50px"
             }} >
-            <IonList>
-                <IonItem>
+              <IonList style={{
+                borderRadius: "50px",
+
+              }} >
+                <IonItem  >
                   <IonSelect interface="action-sheet" placeholder="Level">
                     <IonSelectOption value="Easy">Easy</IonSelectOption>
                     <IonSelectOption value="Medium">Medium</IonSelectOption>
@@ -124,33 +131,78 @@ function HomeScreen({history}) {
             </div>
             <div style={{
               display: 'flex',
-              padding:"80px",
-              marginTop:"-60px"
+              padding: "80px",
+              marginTop: "-60px"
             }} >
-            
-            {/* <h1>Numbers of Questions</h1> */}
-              <IonButton disabled={numb===1?true:false} onClick={(e)=>setNumber(numb-1)} color="danger" >-</IonButton>
+
+              {/* <h1>Numbers of Questions</h1> */}
+              <IonButton disabled={numb === 1 ? true : false} onClick={(e) => setNumber(numb - 1)} color="danger" >-</IonButton>
               <IonInput type='number' style={{
-                marginTop:"-15px"
+                marginTop: "-15px"
               }} value={numb} disabled={true} color="dark" />
-              <IonButton disabled={numb===10?true:false} onClick={(e)=>setNumber(numb+1)} 
-              color="success" >+</IonButton>
+              <IonButton disabled={numb === 10 ? true : false} onClick={(e) => setNumber(numb + 1)}
+                color="success" >+</IonButton>
             </div>
             <div style={{
-           marginTop:"-80px",
-           display:"flex",
-           justifyContent:"center",
-          }} >
-            <IonButton onClick={()=> history.push("/quizScreen")} color={"dark"} >
-                <h1 color='light' style={{
-                  margin:"50px",
-                  color:"#fff"
+              marginTop: "-80px",
+              display: "flex",
+              justifyContent: "center",
+            }} >
+              <IonButton onClick={() => history.push("/quizScreen")} color={"success"} >
+                <h1 color='dark' style={{
+                  margin: "50px",
+                  color: "#000"
                 }} >Start</h1>
-            </IonButton>
-          </div>
+              </IonButton>
+            </div>
           </div>
         </div>
-        
+        <IonApp>
+          <IonMenu content-id="main-content">
+            <IonHeader>
+              <IonToolbar color="primary">
+                <IonTitle>Menu</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+
+            <IonContent>
+              <IonList>
+                <IonListHeader>
+                  Account
+                </IonListHeader>
+                <IonMenuToggle auto-hide="false">
+                  <IonItem button>
+                    <IonIcon slot="start" name='home'></IonIcon>
+                    <IonLabel onClick={()=>history.push("/updateProfile")} >
+                      Profile
+                    </IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+              </IonList>
+            </IonContent>
+          </IonMenu>
+
+          <div style={{
+            backgroundColor: "#0D1117"
+          }} className="ion-page" id="main-content">
+            <IonHeader style={{
+              backgroundColor: "#0D1117"
+            }} >
+              <IonToolbar style={{
+                backgroundColor: "#0D1117"
+              }} >
+                <IonButtons slot="start">
+                  <IonMenuToggle>
+                    <IonButton>
+                      <IonIcon slot="icon-only" icon={menu}></IonIcon>
+                    </IonButton>
+                  </IonMenuToggle>
+                </IonButtons>
+                <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+          </div>
+        </IonApp>
       </IonApp>
     </IonPage>
   )
