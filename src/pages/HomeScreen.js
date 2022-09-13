@@ -1,4 +1,4 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, IonSplitPane, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, IonSplitPane, IonText, IonTitle, IonToolbar } from '@ionic/react'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
@@ -25,11 +25,58 @@ function HomeScreen({ history }) {
       backgroundColor: "#0D1117",
       color: "white"
     }} >
-      <IonApp fullscreen={true} style={{
+      <IonContent fullscreen={true} style={{
         backgroundColor: "#0D1117",
         color: "white"
         // height:"100vh"
       }} >
+      <IonRefresher slot="fixed">
+  <IonRefresherContent />
+</IonRefresher>
+      <IonMenu content-id="main-content">
+            <IonHeader>
+              <IonToolbar color="primary">
+                <IonTitle>Menu</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+
+            <IonContent>
+              <IonList>
+                <IonListHeader>
+                  Account
+                </IonListHeader>
+                <IonMenuToggle auto-hide="false">
+                  <IonItem button>
+                    <IonIcon slot="start" name='home'></IonIcon>
+                    <IonLabel onClick={()=>history.push("/updateProfile")} >
+                      Profile
+                    </IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+              </IonList>
+            </IonContent>
+          </IonMenu>
+
+          <div style={{
+            backgroundColor: "#0D1117"
+          }} className="ion-page" id="main-content">
+            <IonHeader style={{
+              backgroundColor: "#0D1117"
+            }} >
+              <IonToolbar style={{
+                backgroundColor: "#0D1117"
+              }} >
+                <IonButtons slot="start">
+                  <IonMenuToggle>
+                    <IonButton>
+                      <IonIcon slot="icon-only" icon={menu}></IonIcon>
+                    </IonButton>
+                  </IonMenuToggle>
+                </IonButtons>
+                <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+          </div>
         <div style={{
           background: " linear-gradient(to right, #b993d6, #8ca6db)", /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
           width: "150px",
@@ -157,53 +204,9 @@ function HomeScreen({ history }) {
             </div>
           </div>
         </div>
-        <IonApp>
-          <IonMenu content-id="main-content">
-            <IonHeader>
-              <IonToolbar color="primary">
-                <IonTitle>Menu</IonTitle>
-              </IonToolbar>
-            </IonHeader>
-
-            <IonContent>
-              <IonList>
-                <IonListHeader>
-                  Account
-                </IonListHeader>
-                <IonMenuToggle auto-hide="false">
-                  <IonItem button>
-                    <IonIcon slot="start" name='home'></IonIcon>
-                    <IonLabel onClick={()=>history.push("/updateProfile")} >
-                      Profile
-                    </IonLabel>
-                  </IonItem>
-                </IonMenuToggle>
-              </IonList>
-            </IonContent>
-          </IonMenu>
-
-          <div style={{
-            backgroundColor: "#0D1117"
-          }} className="ion-page" id="main-content">
-            <IonHeader style={{
-              backgroundColor: "#0D1117"
-            }} >
-              <IonToolbar style={{
-                backgroundColor: "#0D1117"
-              }} >
-                <IonButtons slot="start">
-                  <IonMenuToggle>
-                    <IonButton>
-                      <IonIcon slot="icon-only" icon={menu}></IonIcon>
-                    </IonButton>
-                  </IonMenuToggle>
-                </IonButtons>
-                <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
-              </IonToolbar>
-            </IonHeader>
-          </div>
-        </IonApp>
-      </IonApp>
+        {/* <IonApp> */}
+          
+      </IonContent>
     </IonPage>
   )
 }
