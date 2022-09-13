@@ -136,8 +136,8 @@ function Quiz() {
                                         background: "#D4D4D4",
                                         paddingLeft:"10px",
                                         paddingRight:"10px",
-                                        paddingTop:"2.5px",
-                                        paddingBottom:"2.5px",
+                                        paddingTop:"10px",
+                                        paddingBottom:"10px",
                                         borderRadius: "50px",
                                         backgroundColor:e !== 1? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%);":"lightblue",
                                         
@@ -168,7 +168,7 @@ function Quiz() {
                                         paddingLeft:"15px",
                                         paddingRight:"15px",
                                         paddingTop:"10px",
-                                        paddingBottom:"7px",
+                                        paddingBottom:"10px",
                                         borderRadius: "50px",
                                         backgroundColor:e !== 1? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%);":"lightblue",
                                     }} >{i+1}</h4>

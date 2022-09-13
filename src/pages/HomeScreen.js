@@ -1,4 +1,5 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, IonSplitPane, IonText, IonTitle, IonToolbar } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter } from '@ionic/react'
+import { App } from '@capacitor/app';
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
@@ -19,64 +20,91 @@ function HomeScreen({ history }) {
   }, [userDetails])
   // console.log(userDetails);
   // console.log(cat[0]);
+  const [presentAlert] = useIonAlert();
+  const ionRouter = useIonRouter();
+  document.addEventListener('ionBackButton', (ev) => {
+    ev.detail.register(-1, () => {
+      if (!ionRouter.canGoBack()) {
+        presentAlert({
+          header: 'Do you really want to Exit ?',
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel',
+              handler: () => {
+
+              },
+            },
+            {
+              text: 'Yes',
+              role: 'confirm',
+              handler: () => {
+                App.exitApp()
+              },
+            },
+          ],
+        })
+      }
+    });
+  });
   return (
 
     <IonPage style={{
       backgroundColor: "#0D1117",
       color: "white"
     }} >
-      <IonContent fullscreen={true} style={{
+      <IonApp fullscreen={true} style={{
         backgroundColor: "#0D1117",
         color: "white"
         // height:"100vh"
       }} >
-      <IonRefresher slot="fixed">
-  <IonRefresherContent />
-</IonRefresher>
-      <IonMenu content-id="main-content">
-            <IonHeader>
-              <IonToolbar color="primary">
-                <IonTitle>Menu</IonTitle>
-              </IonToolbar>
-            </IonHeader>
+        <IonRefresher slot="fixed">
+          <IonRefresherContent />
+        </IonRefresher>
+        <IonMenu content-id="main-content">
+          <IonHeader>
+            <IonToolbar color="primary">
+              <IonTitle>Menu</IonTitle>
+            </IonToolbar>
+          </IonHeader>
 
-            <IonContent>
-              <IonList>
-                <IonListHeader>
-                  Account
-                </IonListHeader>
-                <IonMenuToggle auto-hide="false">
-                  <IonItem button>
-                    <IonIcon slot="start" name='home'></IonIcon>
-                    <IonLabel onClick={()=>history.push("/updateProfile")} >
-                      Profile
-                    </IonLabel>
-                  </IonItem>
-                </IonMenuToggle>
-              </IonList>
-            </IonContent>
-          </IonMenu>
+          <IonContent>
+            <IonList>
+              <IonListHeader>
+                Account
+              </IonListHeader>
+              <IonMenuToggle auto-hide="false">
+                <IonItem button>
+                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonLabel onClick={() => history.push("/updateProfile")} >
+                    Profile
+                  </IonLabel>
+                </IonItem>
+              </IonMenuToggle>
+            </IonList>
+          </IonContent>
+        </IonMenu>
 
-          <div style={{
+        <div style={{
+          backgroundColor: "#0D1117"
+        }} className="ion-page" id="main-content">
+          <IonHeader style={{
             backgroundColor: "#0D1117"
-          }} className="ion-page" id="main-content">
-            <IonHeader style={{
+          }} >
+            <IonToolbar style={{
               backgroundColor: "#0D1117"
             }} >
-              <IonToolbar style={{
-                backgroundColor: "#0D1117"
-              }} >
-                <IonButtons slot="start">
-                  <IonMenuToggle>
-                    <IonButton>
-                      <IonIcon slot="icon-only" icon={menu}></IonIcon>
-                    </IonButton>
-                  </IonMenuToggle>
-                </IonButtons>
-                <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
-              </IonToolbar>
-            </IonHeader>
-          </div>
+              <IonButtons slot="start">
+                <IonMenuToggle>
+                  <IonButton>
+                    <IonIcon slot="icon-only" icon={menu}></IonIcon>
+                  </IonButton>
+                </IonMenuToggle>
+              </IonButtons>
+              <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+        </div>
         <div style={{
           background: " linear-gradient(to right, #b993d6, #8ca6db)", /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
           width: "150px",
@@ -85,7 +113,7 @@ function HomeScreen({ history }) {
           margin: "0 auto",
           // padding:"1%",
           borderRadius: "20px",
-          marginTop:"100px",
+          marginTop: "100px",
           // borderBottomRightRadius: "20px",
           display: "flex",
           justifyContent: "center",
@@ -205,8 +233,8 @@ function HomeScreen({ history }) {
           </div>
         </div>
         {/* <IonApp> */}
-          
-      </IonContent>
+
+      </IonApp>
     </IonPage>
   )
 }
