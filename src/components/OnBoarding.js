@@ -103,7 +103,7 @@ const OnBoarding = ({ history }) => {
           })
         const check2 = await storage.get("login");
         if (check2) {
-            history.push("/home")
+            history.replace("/home")
         }
     }
     useLayoutEffect(()=>{

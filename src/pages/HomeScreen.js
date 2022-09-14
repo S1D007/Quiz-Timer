@@ -1,4 +1,4 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading } from '@ionic/react'
 import { App } from '@capacitor/app';
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
@@ -8,11 +8,11 @@ import { collection, doc, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { UserContext } from '../components/Functions/context';
 import { Route, Switch } from 'react-router'
-import { updateProfile } from 'firebase/auth'
 function HomeScreen({ history }) {
+  const [present, dismiss] = useIonLoading();
   const [numb, setNumber] = useState(1)
   const userDetails = React.useContext(UserContext)
-  const [coinVAl, setCoinVAL] = useState(100)
+  const [coinVAl, setCoinVAL] = useState(null)
   const [cat, setCat] = useState([])
   useLayoutEffect(() => {
     setCoinVAL(userDetails.coins)
@@ -31,9 +31,6 @@ function HomeScreen({ history }) {
             {
               text: 'No',
               role: 'cancel',
-              handler: () => {
-
-              },
             },
             {
               text: 'Yes',
@@ -47,28 +44,28 @@ function HomeScreen({ history }) {
       }
     });
   });
+
   return (
 
-    <IonPage style={{
+    <IonPage 
+     style={{
       backgroundColor: "#0D1117",
       color: "white"
     }} >
+    
       <IonApp fullscreen={true} style={{
         backgroundColor: "#0D1117",
         color: "white"
         // height:"100vh"
       }} >
-        <IonRefresher slot="fixed">
-          <IonRefresherContent />
-        </IonRefresher>
-        <IonMenu content-id="main-content">
-          <IonHeader>
-            <IonToolbar color="primary">
+        <IonMenu color={"dark"} content-id="main-content">
+          <IonHeader color={"dark"} >
+            <IonToolbar color='dark'>
               <IonTitle>Menu</IonTitle>
             </IonToolbar>
           </IonHeader>
 
-          <IonContent>
+          <IonContent color={"dark"} >
             <IonList>
               <IonListHeader>
                 Account
@@ -176,14 +173,14 @@ function HomeScreen({ history }) {
               }} >
                 <IonItem>
                   <IonSelect interface="action-sheet" placeholder="Choose a Category">
-                    {/* {
-                      userDetails.cattegories.map((e)=>{
-                        return <IonSelectOption value={e.value} >
-                          {e.name}
-                        </IonSelectOption>
-                      })
-                    } */}
-                  </IonSelect>
+          {/* {
+            cat.map((e)=>{
+              return <IonSelectOption>
+                {e.name}
+              </IonSelectOption>
+            })
+          } */}
+        </IonSelect>
                 </IonItem>
               </IonList>
             </div>

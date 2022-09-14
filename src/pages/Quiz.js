@@ -1,3 +1,4 @@
+import { questions } from './json/questions';
 import { IonApp, IonButton, IonButtons, IonContent, IonIcon, IonImg, IonPage } from '@ionic/react'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
@@ -6,6 +7,13 @@ function Quiz() {
     const [counter, setCounter] = React.useState(5);
     const counterRef = React.useRef(counter);
     const [bgColor, setBgColor] = useState("white");
+    const [color,setColor] = useState(undefined)
+    const [que, setQuestions] = useState([])
+    const [index,setIndex] = useState()
+    const [countCoin,setCountCoin] = useState(100)
+    useLayoutEffect((e) => {
+        setQuestions([...questions[0].opt, questions[0].a])
+    }, [])
     React.useEffect(() => {
         const interval = setInterval(() => {
             setCounter((prevCount) => prevCount - 1);
@@ -15,8 +23,6 @@ function Quiz() {
         }, 1000);
     }, []);
 
-    const xy = ["It is asdsdasdsadasdEasy sdfdssdfdsfdsffto Use", "It is Dsddsfdsfdffdfdfifficult",
-        "it is Not so Posdfddspuldfdsfdsfar", "I likedsfdsfsdfdsfdfdsf Python"]
     const qw = [1, 2, 3, 4, 5, 6]
     useEffect(() => {
         switch (counter) {
@@ -43,6 +49,36 @@ function Quiz() {
         }
     }, [counter])
 
+
+    const checker = (e,i) =>{
+        if(e === questions[0].a){
+            setIndex(i)
+            setColor("lightgreen")
+            switch (counter) {
+                case 5:
+                    setCountCoin(countCoin+5*2)
+                    break;
+                case 4:
+                    setCountCoin(countCoin+4*2)
+                    break;
+                case 3:
+                    setCountCoin(countCoin+3*2)
+                    break;
+                case 2:
+                    setCountCoin(countCoin+2*2)
+                    break;
+                case 1:
+                    setCountCoin(countCoin+1*2)
+                    break;
+                case 0:
+                    alert("Times Up")
+                    break;
+                default:
+                    setCountCoin(countCoin)
+            }
+        }
+    }
+
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",
@@ -68,7 +104,7 @@ function Quiz() {
                         fontSize: "1.5rem",
                         fontWeight: "bold",
                         fontFamily: "monospace",
-                    }} >100</span>
+                    }} >{countCoin}</span>
                     <div style={{
                         // position: "absolute",
                         width: "102px",
@@ -125,63 +161,67 @@ function Quiz() {
                             borderRadius: "50px"
                         }} />
                     </div>
-                    
-                        <div style={{ display: "flex", justifyContent: "space-evenly",alignContent: "center",margin:"40px",marginTop:"-150px" }} >
-                            {
-                                qw.map((e) => {
-                                    return <div style={{
-                                        color:"rgba(0,0,0,0.7)"
-                                    }} >
+
+                    <div style={{ display: "flex", justifyContent: "space-evenly", alignContent: "center", margin: "40px", marginTop: "-150px" }} >
+                        {
+                            qw.map((e) => {
+                                return <div style={{
+                                    color: "rgba(0,0,0,0.7)"
+                                }} >
                                     <h3 style={{
                                         background: "#D4D4D4",
-                                        paddingLeft:"10px",
-                                        paddingRight:"10px",
-                                        paddingTop:"10px",
-                                        paddingBottom:"10px",
+                                        paddingLeft: "10px",
+                                        paddingRight: "10px",
+                                        paddingTop: "5px",
+                                        paddingBottom: "5px",
                                         borderRadius: "50px",
-                                        backgroundColor:e !== 1? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%);":"lightblue",
-                                        
+                                        backgroundColor: e !== 1 ? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%)" : "lightblue",
                                     }} >{e}</h3>
-                                    </div>
-                                })
-                            }
+                                </div>
+                            })
+                        }
                     </div>
                     <div style={{
-                        margin:"5%"
+                        margin: "5%",
                     }} >
                         <h3 style={{
-                            fontWeight:"bold"
-                        }} >Why Javascript is So Popular ?</h3>
+                            fontWeight: "bold"
+                        }} >{questions[0].q}</h3>
                         <div style={{
-                            display:"table-row",
-                            justifyContent:"space-between",
+                            display: "table-row",
+                            justifyContent: "space-between",
+                            alignSelf: "auto"
                         }} >
-                            {xy.map((e,i)=>{
+                            {que.map((e, i) => {
                                 return <div style={{
-                                    display:"inline-flex"
+                                    display: "inline-flex"
                                 }} >
-                                <div style={{
-                                    marginRight:"10px"
-                                }} >
-                                <h4 style={{
-                                        background: "#D4D4D4",
-                                        paddingLeft:"15px",
-                                        paddingRight:"15px",
-                                        paddingTop:"10px",
-                                        paddingBottom:"10px",
-                                        borderRadius: "50px",
-                                        backgroundColor:e !== 1? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%);":"lightblue",
-                                    }} >{i+1}</h4>
-                                </div>
                                     <div style={{
-                                        display:"flex",
-                                        justifyContent:"flex-start",
-                                        alignContent:"center",
-                                        alignItems:"center"
+                                        marginRight: "10px"
                                     }} >
-                                    <h5 style={{
-                                        fontFamily:"Roboto"
-                                    }} >{e}</h5>
+                                        <h4 style={{
+                                            background: "#D4D4D4",
+                                            paddingLeft: "15px",
+                                            paddingRight: "15px",
+                                            paddingTop: "10px",
+                                            paddingBottom: "10px",
+                                            borderRadius: "50px",
+                                            backgroundColor: e !== 1 ? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%)" : "lightblue",
+                                        }} >{i + 1}</h4>
+                                    </div>
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: "flex-start",
+                                        alignContent: "center",
+                                        alignItems: "center",
+                                        fontFamily: "monospace"
+                                    }} >
+                                        <h5 onClick={()=>checker(e,i)} style={{
+                                            fontFamily: "monospace",
+                                            backgroundColor: i === index ? color:"",
+                                            padding:"10px",
+                                            borderRadius:"20px"
+                                        }} >{e}</h5>
                                     </div>
                                 </div>
                             })}

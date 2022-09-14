@@ -28,8 +28,6 @@ import HomeScreen from './pages/HomeScreen';
 import Profile from './pages/Profile'
 import UpdateProfile from './pages/UpdateProfile'
 import Quiz from './pages/Quiz'
-import { useEffect, useState } from 'react';
-import { Storage } from '@ionic/storage';
 setupIonicReact();
 const App = () => {
   return (

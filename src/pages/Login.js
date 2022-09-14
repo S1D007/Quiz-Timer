@@ -154,7 +154,7 @@ function Login({ history }) {
                         padding: "5px",
                         color: "white"
                     }} onClick={() => {
-                        history.push('/signup');
+                        history.replace('/signup');
                     }} >
                         Signup
                     </span>

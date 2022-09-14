@@ -33,15 +33,6 @@ const UserProvider = ({ children }) => {
   }
   getData()
   const q = query(user, where("email", "==", email))
-  // getDocs(q).then((e) => {
-  //   // console.log("Done");
-  //   e.forEach((doc) => {
-  //     setName(doc.data().name)
-  //     setPhone(doc.data().phone)
-  //     setCoins(doc.data().coins)
-  //     setCattegories(doc.data().cattegories)
-  //   }); 
-  // })
   onSnapshot(q, (doc) => {
     doc.docs.map((e) => {
       setName(e.data().name)

@@ -24,7 +24,7 @@ function Login({ history }) {
         createUserWithEmailAndPassword(auth, email, pass).then(() => {
             storage.set("signup",true)
             storage.set("email",email)
-            history.push("/profile")
+            history.replace("/profile")
         }).catch((e) => {
             alert(e.message)
         })
