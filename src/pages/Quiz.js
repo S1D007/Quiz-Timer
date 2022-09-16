@@ -1,20 +1,21 @@
 import { questions } from './json/questions';
-import { IonApp, IonSpinner, IonButtons, IonContent, IonIcon, IonImg, IonPage } from '@ionic/react'
+import { IonApp, IonSpinner, IonButtons, IonContent, IonIcon, IonImg, IonPage, IonButton } from '@ionic/react'
 import React, { useEffect, useLayoutEffect, useState, useContext } from 'react'
 import coin from "../components/Images/coin.png"
 import { alarmOutline } from "ionicons/icons"
 import { UserContext } from '../components/Functions/context';
 import { doc, updateDoc } from "firebase/firestore"
 import { db } from '../config/firebase'
-let backgroundColor = ""
+import "./css/Quiz.css"
 function Quiz() {
     const userDetails = useContext(UserContext)
     const [counter, setCounter] = React.useState(5);
     const [queCount, setQueCount] = useState(0)
     const [bgColor, setBgColor] = useState("white")
     const [que, setQuestions] = useState([])
+    const [selected, setSelected] = useState("")
+    const [bgAnswer, setBgAnswer] = useState("")
     const [index, setIndex] = useState()
-    const [selected, setSelected] = useState(1)
     const [countCoin, setCountCoin] = useState(<IonSpinner />)
     const id = localStorage.getItem("id")
     const docRef = doc(db, "users", id)
@@ -77,8 +78,6 @@ function Quiz() {
         }
     }, [counter])
     const userSelectedOption = (optionInArrayOfQuestions, indexNumber) => {
-        setCounter(5)
-        counterRef.current = 5
         if (optionInArrayOfQuestions === questions[queCount].a) {
             setIndex(indexNumber);
             switch (counter) {
@@ -114,7 +113,7 @@ function Quiz() {
                     setCountCoin(countCoin)
             }
 
-        }else{
+        } else {
             switch (counter) {
                 case 5:
                     updateDoc(docRef, {
@@ -142,14 +141,29 @@ function Quiz() {
                     })
                     // setPrevCount((e)=>queCount)
                     break;
-                    default:
-        }}
-        setQueCount((e) => e + 1);
+                default:
+            }
+        }
+        if (optionInArrayOfQuestions !== questions[queCount].a){
+            setQueCount((e) => e + 1)
+        }
     }
 
-    useEffect(()=>{
-        userSelectedOption()
-    },[])
+    const handdleCheck = (i) => {
+        setSelected(i)
+    }
+    console.log(selected);
+    const handdleSelect = (i) => {
+        if (selected === i && selected === questions[queCount].a) {
+            setBgAnswer("correct")
+        } else if (selected === i && selected !== questions[queCount].a) {
+            setBgAnswer("wrong")
+        } else if (i === questions[queCount].a) {
+            setBgAnswer("correct")
+        }
+    }
+
+    console.log(handdleSelect())
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",
@@ -275,18 +289,39 @@ function Quiz() {
                                         alignItems: "center",
                                         fontFamily: "monospace"
                                     }} >
-                                        <h5 onClick={() => {userSelectedOption(optionInArrayOfQuestions, indexNumber)
+                                        <h5 onClick={() => {
+                                            userSelectedOption(optionInArrayOfQuestions, indexNumber)
+                                            handdleCheck(optionInArrayOfQuestions)
+                                            handdleSelect(optionInArrayOfQuestions)
                                         }} style={{
                                             fontFamily: "monospace",
-                                            // backgroundColor : "yellow",
                                             padding: "10px",
-                                            borderRadius: "20px"
+                                            borderRadius: "20px",
+                                            fontSize: "18px"
                                         }}
-                                        
-                                         >{optionInArrayOfQuestions}</h5>
+                                            className={indexNumber === index ? bgAnswer : ""}
+                                        >{optionInArrayOfQuestions}</h5>
                                     </div>
                                 </div>
                             })}
+                            <div style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginTop: "50px"
+                            }} >
+                                <IonButton onClick={() => {
+                                    setQueCount((e) => e + 1);
+                                    setCounter(5)
+                                    counterRef.current = 5
+                                    setBgAnswer("")
+                                }} style={{
+                                    width: "150px",
+                                    fontSize: "20px"
+                                }} >
+                                    Next
+                                </IonButton>
+                            </div>
                         </div>
                     </div>
                 </div>

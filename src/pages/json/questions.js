@@ -10,7 +10,7 @@ const questions = [
   },
   {
     q:"What is qwerty?",
-    a:"Collection in a Systematic Manner",
+    a:"Collection ",
     opt:[
       "I Dont Knowasdas",
       "ABCasdsdasdsadasdasdads",
