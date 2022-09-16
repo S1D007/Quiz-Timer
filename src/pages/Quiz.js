@@ -1,29 +1,57 @@
 import { questions } from './json/questions';
-import { IonApp, IonButton, IonButtons, IonContent, IonIcon, IonImg, IonPage } from '@ionic/react'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { IonApp, IonSpinner, IonButtons, IonContent, IonIcon, IonImg, IonPage } from '@ionic/react'
+import React, { useEffect, useLayoutEffect, useState, useContext } from 'react'
 import coin from "../components/Images/coin.png"
 import { alarmOutline } from "ionicons/icons"
+import { UserContext } from '../components/Functions/context';
+import { doc, updateDoc } from "firebase/firestore"
+import { db } from '../config/firebase'
+let backgroundColor = ""
 function Quiz() {
+    const userDetails = useContext(UserContext)
     const [counter, setCounter] = React.useState(5);
-    const counterRef = React.useRef(counter);
-    const [bgColor, setBgColor] = useState("white");
-    const [color,setColor] = useState(undefined)
+    const [queCount, setQueCount] = useState(0)
+    const [bgColor, setBgColor] = useState("white")
     const [que, setQuestions] = useState([])
-    const [index,setIndex] = useState()
-    const [countCoin,setCountCoin] = useState(100)
-    useLayoutEffect((e) => {
-        setQuestions([...questions[0].opt, questions[0].a])
+    const [index, setIndex] = useState()
+    const [selected, setSelected] = useState(1)
+    const [countCoin, setCountCoin] = useState(<IonSpinner />)
+    const id = localStorage.getItem("id")
+    const docRef = doc(db, "users", id)
+    const counterRef = React.useRef(counter);
+    useEffect(() => {
+        setCountCoin(userDetails.coins)
+    }, [userDetails])
+
+    useLayoutEffect(() => {
+        const timeInterval = () => {
+            setInterval(() => {
+                setCounter((prevCount) => prevCount - 1);
+                counterRef.current--;
+                if (counterRef.current === 0) {
+                    counterRef.current = 5;
+                    setCounter(5)
+                    setQueCount((e) => e + 1)
+                };
+            }, 1000);
+        }
+
+        timeInterval()
     }, [])
-    React.useEffect(() => {
-        const interval = setInterval(() => {
-            setCounter((prevCount) => prevCount - 1);
-            counterRef.current--;
-
-            if (counterRef.current === 0) clearInterval(interval);
-        }, 1000);
-    }, []);
-
-    const qw = [1, 2, 3, 4, 5, 6]
+    useEffect(() => {
+        if (counter === 0) {
+            updateDoc(docRef, {
+                coin: countCoin - 1
+            })
+        }
+    }, [counter, docRef, countCoin])
+    useLayoutEffect(() => {
+        setQuestions(handdleShuffle([...questions[queCount].opt, questions[queCount].a]))
+    }, [queCount])
+    const handdleShuffle = (options) => {
+        return options.sort(() => Math.random() - 0.5)
+    }
+    const questionNumbering = [1, 2, 3, 4, 5, 6]
     useEffect(() => {
         switch (counter) {
             case 5:
@@ -48,37 +76,80 @@ function Quiz() {
                 setBgColor("#fff")
         }
     }, [counter])
-
-
-    const checker = (e,i) =>{
-        if(e === questions[0].a){
-            setIndex(i)
-            setColor("lightgreen")
+    const userSelectedOption = (optionInArrayOfQuestions, indexNumber) => {
+        setCounter(5)
+        counterRef.current = 5
+        if (optionInArrayOfQuestions === questions[queCount].a) {
+            setIndex(indexNumber);
             switch (counter) {
                 case 5:
-                    setCountCoin(countCoin+5*2)
+                    updateDoc(docRef, {
+                        coin: (countCoin + 5 * 2)
+                    })
                     break;
                 case 4:
-                    setCountCoin(countCoin+4*2)
+                    updateDoc(docRef, {
+                        coin: (countCoin + 4 * 2)
+                    })
                     break;
                 case 3:
-                    setCountCoin(countCoin+3*2)
+                    updateDoc(docRef, {
+                        coin: (countCoin + 3 * 2)
+                    })
                     break;
                 case 2:
-                    setCountCoin(countCoin+2*2)
+                    updateDoc(docRef, {
+                        coin: (countCoin + 2 * 2)
+                    })
                     break;
                 case 1:
-                    setCountCoin(countCoin+1*2)
+                    updateDoc(docRef, {
+                        coin: (countCoin + 1 * 2)
+                    })
+                    // setPrevCount((e)=>queCount)
                     break;
                 case 0:
-                    alert("Times Up")
                     break;
                 default:
                     setCountCoin(countCoin)
             }
-        }
+
+        }else{
+            switch (counter) {
+                case 5:
+                    updateDoc(docRef, {
+                        coin: (countCoin - 5 * 2)
+                    })
+                    break;
+                case 4:
+                    updateDoc(docRef, {
+                        coin: (countCoin - 4 * 2)
+                    })
+                    break;
+                case 3:
+                    updateDoc(docRef, {
+                        coin: (countCoin - 3 * 2)
+                    })
+                    break;
+                case 2:
+                    updateDoc(docRef, {
+                        coin: (countCoin - 2 * 2)
+                    })
+                    break;
+                case 1:
+                    updateDoc(docRef, {
+                        coin: (countCoin - 1 * 2)
+                    })
+                    // setPrevCount((e)=>queCount)
+                    break;
+                    default:
+        }}
+        setQueCount((e) => e + 1);
     }
 
+    useEffect(()=>{
+        userSelectedOption()
+    },[])
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",
@@ -106,19 +177,13 @@ function Quiz() {
                         fontFamily: "monospace",
                     }} >{countCoin}</span>
                     <div style={{
-                        // position: "absolute",
                         width: "102px",
                         height: "34px",
                         left: "137px",
                         top: "50px",
                         borderRadius: "10px",
-                        // padding:"10px",
-                        // paddingLeft: "50px",
-                        // paddingRight: "50px",
                         color: `black`,
                         backgroundColor: `${bgColor}`,
-                        // paddingTop:"20px",
-                        // paddingBottom:"10px"
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center"
@@ -126,18 +191,12 @@ function Quiz() {
                     }} >
                         <IonIcon size='large' icon={alarmOutline} />
                         <h1 style={{
-                            // position: "absolute",
-                            // left: "176.67px",
-                            // top: "53px",
                             fontFamily: "monospace",
                             fontWeight: "400",
                             fontSize: "30px",
                             marginBottom: "18px",
                             marginLeft: "20px"
-                            // lineHeight: "16px",
-
                         }} > {counter}</h1>
-
                     </div>
                 </div>
 
@@ -164,8 +223,8 @@ function Quiz() {
 
                     <div style={{ display: "flex", justifyContent: "space-evenly", alignContent: "center", margin: "40px", marginTop: "-150px" }} >
                         {
-                            qw.map((e) => {
-                                return <div style={{
+                            questionNumbering.map((e) => {
+                                return <div key={e} style={{
                                     color: "rgba(0,0,0,0.7)"
                                 }} >
                                     <h3 style={{
@@ -186,14 +245,14 @@ function Quiz() {
                     }} >
                         <h3 style={{
                             fontWeight: "bold"
-                        }} >{questions[0].q}</h3>
+                        }} >{questions[queCount].q}</h3>
                         <div style={{
                             display: "table-row",
                             justifyContent: "space-between",
                             alignSelf: "auto"
                         }} >
-                            {que.map((e, i) => {
-                                return <div style={{
+                            {que.map((optionInArrayOfQuestions, indexNumber) => {
+                                return <div key={indexNumber} style={{
                                     display: "inline-flex"
                                 }} >
                                     <div style={{
@@ -206,8 +265,8 @@ function Quiz() {
                                             paddingTop: "10px",
                                             paddingBottom: "10px",
                                             borderRadius: "50px",
-                                            backgroundColor: e !== 1 ? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%)" : "lightblue",
-                                        }} >{i + 1}</h4>
+                                            backgroundColor: optionInArrayOfQuestions !== 1 ? "linear-gradient(122.76deg, #3550DC -35.72%, #27E9F7 172.73%)" : "lightblue",
+                                        }} >{indexNumber + 1}</h4>
                                     </div>
                                     <div style={{
                                         display: "flex",
@@ -216,12 +275,15 @@ function Quiz() {
                                         alignItems: "center",
                                         fontFamily: "monospace"
                                     }} >
-                                        <h5 onClick={()=>checker(e,i)} style={{
+                                        <h5 onClick={() => {userSelectedOption(optionInArrayOfQuestions, indexNumber)
+                                        }} style={{
                                             fontFamily: "monospace",
-                                            backgroundColor: i === index ? color:"",
-                                            padding:"10px",
-                                            borderRadius:"20px"
-                                        }} >{e}</h5>
+                                            // backgroundColor : "yellow",
+                                            padding: "10px",
+                                            borderRadius: "20px"
+                                        }}
+                                        
+                                         >{optionInArrayOfQuestions}</h5>
                                     </div>
                                 </div>
                             })}

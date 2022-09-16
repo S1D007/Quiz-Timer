@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
 import { person } from "ionicons/icons"
-import { collection, doc, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { UserContext } from '../components/Functions/context';
 import { Route, Switch } from 'react-router'
@@ -44,7 +44,8 @@ function HomeScreen({ history }) {
       }
     });
   });
-
+  const id = localStorage.getItem("id")
+  const docRef = doc(db,"users",id)
   return (
 
     <IonPage 
@@ -220,7 +221,11 @@ function HomeScreen({ history }) {
               display: "flex",
               justifyContent: "center",
             }} >
-              <IonButton onClick={() => history.push("/quizScreen")} color={"success"} >
+              <IonButton onClick={() =>{ history.push("/quizScreen")
+              updateDoc(docRef,{
+                coin:coinVAl - 5
+              })}
+              } color={"success"} >
                 <h1 color='dark' style={{
                   margin: "50px",
                   color: "#000"
