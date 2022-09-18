@@ -1,10 +1,11 @@
 import { IonButton,IonInput,IonLabel, IonText, IonImg, IonPage, useIonLoading } from '@ionic/react'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Storage } from "@ionic/storage"
-import {app} from "../config/firebase"
+import {app, db} from "../config/firebase"
 
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Welcome from "../components/Images/welcome.gif"
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 
 function Login({ history }) {
     const [email, setEmail] = useState("")
@@ -21,9 +22,10 @@ function Login({ history }) {
             spinner: 'circles'
           })
         signInWithEmailAndPassword(auth, email, pass).then(() => {
+            localStorage.setItem("emailOfUser",email)
             storage.set("login",true)
             storage.set("email",email)
-            history.push("/home");
+            history.replace("/home");
         }).catch((e) => {
             alert(e.message)
         })
@@ -36,7 +38,14 @@ function Login({ history }) {
     }
     useLayoutEffect(()=>{
         store()
-    },[])    
+    },[])  
+    useEffect(()=>{
+        const user = collection(db, "users")
+        const q = query(user, where("email", "==", email))
+        onSnapshot(q, (doc) => {
+            localStorage.setItem("id",doc.docs[0].id)
+  });
+    },[email])  
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",

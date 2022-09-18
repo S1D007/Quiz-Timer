@@ -89,7 +89,7 @@ const OnBoarding = ({ history }) => {
     storage.create();
     const onClickHanddler = async()=>{
         await storage.set("OnBoardingEnded",true)
-        history.push("/login")
+        history.replace("/login")
     }
     const [present, dismiss] = useIonLoading();
 

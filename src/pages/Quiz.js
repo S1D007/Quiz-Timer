@@ -19,30 +19,18 @@ function Quiz({history}) {
     const [bgAnswer, setBgAnswer] = useState("")
     const [index, setIndex] = useState()
     const [queIndex,setQueIndex] = useState()
+    const [questionNumbering,setQuestionNumbering] = useState([])
     const [message,setMessage] = useState("")
     const [countCoin, setCountCoin] = useState(<IonSpinner />)
     const [presentAlert] = useIonAlert();
     const id = localStorage.getItem("id")
     const docRef = doc(db, "users", id)
     const counterRef = React.useRef(counter);
+    const number =  localStorage.getItem("queNumber")
+    // console.log(typeof 5)
     useEffect(() => {
         setCountCoin(userDetails.coins)
     }, [userDetails])
-    const timeInterval = () => {
-        const interval = setInterval(() => {
-            setCounter((prevCount) => prevCount - 1);
-            counterRef.current--;
-            if (counterRef.current === 0) {
-                updateDoc(docRef, {
-                    coin: (countCoin - 1)
-                })
-                counterRef.current = 5;
-                setCounter(5)
-                setQueCount((e) => e + 1)
-                setBgAnswer("")
-                setSelected(false)
-            };}, 1000);
-    }
     useLayoutEffect(() => {
         const timeInterval = () => {
             const interval = setInterval(() => {
@@ -61,6 +49,7 @@ function Quiz({history}) {
 
     const [present] = useIonToast();
 
+
   const presentToast = (msg,color) => {
     present({
       message: msg,
@@ -75,13 +64,47 @@ function Quiz({history}) {
     const handdleShuffle = (options) => {
         return options.sort(() => Math.random() - 0.5)
     }
-    const questionNumbering = [1, 2, 3, 4, 5, 6]
+
+    useEffect(()=>{
+        switch(number){
+            case "1" :
+                 setQuestionNumbering([1])
+                break;
+            case "2" :
+                 setQuestionNumbering([1,2])
+                break;
+            case "3" :
+                 setQuestionNumbering([1,2,3])
+                break;
+            case "4" :
+                 setQuestionNumbering([1,2,3,4])
+                break;
+                case "5" :
+                 setQuestionNumbering([1,2,3,4,5])
+                break;
+                case "6" :
+                 setQuestionNumbering([1,2,3,4,5,6])
+                break;
+                case "7" :
+                 setQuestionNumbering([1,2,3,4,5,6,7])
+                break;
+                case "8" :
+                 setQuestionNumbering([1,2,3,4,5,6,7,8])
+                break;
+                case "9" :
+                 setQuestionNumbering([1,2,3,4,5,6,7,8,9])
+                break;
+                case "10" :
+                 setQuestionNumbering([1,2,3,4,5,6,7,8,9,10])
+                break;
+            default:
+    
+        }
+    },[number])
     
     useEffect(()=>{
         setQueIndex((e)=>questionNumbering[queCount]-1)
-    },[queCount])
-    console.log("->"+queCount);
-    console.log("=>"+queIndex);
+    },[queCount,questionNumbering])
     useEffect(() => {
         switch (counter) {
             case 5:
@@ -200,7 +223,7 @@ function Quiz({history}) {
     //     que:que.length
     // });
     useEffect(()=>{
-        if(queCount > que.length){
+        if((queCount).toString() === number){
             presentAlert({
                 header: 'Great! Well Done',
             buttons: [
@@ -214,7 +237,7 @@ function Quiz({history}) {
                 ],
               })
         }
-    },[que.length,queCount,history,presentAlert])
+    },[que.length,queCount,history,presentAlert,number])
     return(<IonPage style={{
             backgroundColor: "#0D1117",
         }} >

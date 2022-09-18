@@ -14,12 +14,6 @@ function HomeScreen({ history }) {
   const userDetails = React.useContext(UserContext)
   const [coinVAl, setCoinVAL] = useState(null)
   const [cat, setCat] = useState([])
-  useLayoutEffect(() => {
-    setCoinVAL(userDetails.coins)
-    setCat(userDetails.cattegories)
-  }, [userDetails])
-  // console.log(userDetails);
-  // console.log(cat[0]);z
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
   document.addEventListener('ionBackButton', (ev) => {
@@ -47,8 +41,13 @@ function HomeScreen({ history }) {
       }
     });
   });
+  useEffect(() => {
+    setCoinVAL(userDetails.coins)
+    setCat(userDetails.cattegories)
+  },[userDetails])
   const id = localStorage.getItem("id")
   const docRef = doc(db,"users",id)
+  localStorage.setItem("queNumber",numb)
   return (
 
     <IonPage 
