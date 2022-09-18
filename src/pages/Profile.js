@@ -5,7 +5,7 @@ import ProfileImg from "../components/Images/profile.gif"
 import { EmailContext } from '../components/Functions/context';
 import { Storage } from '@ionic/storage';
 import {db} from "../config/firebase"
-import {collection, addDoc, Timestamp} from 'firebase/firestore'
+import {collection, addDoc, Timestamp, onSnapshot, where, query} from 'firebase/firestore'
 // import {category} from "./json/category"
 let category = [
   {
@@ -64,6 +64,13 @@ const Profile = ({ history }) => {
     store.set("email",email)
     history.replace("/login")
   } 
+  useEffect(()=>{
+    const user = collection(db, "users")
+    const q = query(user, where("email", "==", email))
+    onSnapshot(q, (doc) => {
+        localStorage.setItem("id",doc.docs[0].id)
+});
+},[email])  
   return (
     <IonPage class='profile' style={{
       backgroundColor: "#fff",

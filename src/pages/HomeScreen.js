@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
 import { person } from "ionicons/icons"
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import { db } from '../config/firebase'
 import { UserContext } from '../components/Functions/context';
 import { Route, Switch } from 'react-router'
@@ -41,12 +41,26 @@ function HomeScreen({ history }) {
       }
     });
   });
-  useEffect(() => {
-    setCoinVAL(userDetails.coins)
-    setCat(userDetails.cattegories)
-  },[userDetails])
+  // useEffect(() => {
+  //   setCoinVAL(userDetails.coins)
+  //   setCat(userDetails.cattegories)
+  // },[userDetails])
   const id = localStorage.getItem("id")
   const docRef = doc(db,"users",id)
+  // console.log(docRef);
+  // const id = localStorage.getItem("id")
+  // const user = collection(db, "users")
+  const doooc = async() =>{
+    const docum = doc(db,"users",id)
+    const ref = await getDoc(docum)
+    // setName(ref.data().name)
+    // setPhone(ref.data().phone)
+    setCoinVAL(ref.data().coin)
+    // setCattegories(ref.data().cattegories)
+  }
+  useEffect(()=>{
+    doooc()
+  },[])
   localStorage.setItem("queNumber",numb)
   return (
 

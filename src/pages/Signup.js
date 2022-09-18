@@ -1,9 +1,11 @@
 import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage, useIonLoading } from '@ionic/react'
-import React, { useLayoutEffect, useState,createContext } from 'react';
+import React, { useLayoutEffect, useState,createContext, useEffect } from 'react';
 import { getAuth, createUserWithEmailAndPassword, } from "firebase/auth";
 // import LoginAnim from "../components/Images/loginGIF.gif";
 import Back from "../components/Images/chevron-back-outline.svg"
 import { Storage } from '@ionic/storage';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 export const EmailContext = createContext()
 function Login({ history }) {
@@ -39,6 +41,14 @@ function Login({ history }) {
     useLayoutEffect(()=>{
         store()
     },[])
+        useEffect(()=>{
+        const user = collection(db, "users")
+        const q = query(user, where("email", "==", email))
+        onSnapshot(q, (doc) => {
+            localStorage.setItem("id",doc.docs[0].id)
+  });
+        })
+
     return (
         <IonPage style={{
             backgroundColor: "#0D1117",
