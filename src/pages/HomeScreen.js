@@ -19,7 +19,7 @@ function HomeScreen({ history }) {
     setCat(userDetails.cattegories)
   }, [userDetails])
   // console.log(userDetails);
-  // console.log(cat[0]);
+  // console.log(cat[0]);z
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
   document.addEventListener('ionBackButton', (ev) => {
@@ -31,6 +31,9 @@ function HomeScreen({ history }) {
             {
               text: 'No',
               role: 'cancel',
+              handler: () => {
+                history.push("/home")
+              },
             },
             {
               text: 'Yes',
@@ -53,12 +56,11 @@ function HomeScreen({ history }) {
       backgroundColor: "#0D1117",
       color: "white"
     }} >
-    
       <IonApp fullscreen={true} style={{
         backgroundColor: "#0D1117",
-        color: "white"
-        // height:"100vh"
+        color: "white",
       }} >
+      
         <IonMenu color={"dark"} content-id="main-content">
           <IonHeader color={"dark"} >
             <IonToolbar color='dark'>

@@ -54,19 +54,16 @@ const Profile = ({ history }) => {
         email:email,
         phone:phone,
         name:name,
-        coins:100,
+        coin:100,
         created: Timestamp.now()
       })
     } catch (err) {
       alert(err)
     }
     await store.set("profile",true)
+    store.set("email",email)
     history.replace("/login")
-  }
-
-  // useLayoutEffect(()=>{
-  //   onClickHanddler()
-  // },[])
+  } 
   return (
     <IonPage class='profile' style={{
       backgroundColor: "#fff",

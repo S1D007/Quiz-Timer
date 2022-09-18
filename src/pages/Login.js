@@ -22,6 +22,7 @@ function Login({ history }) {
           })
         signInWithEmailAndPassword(auth, email, pass).then(() => {
             storage.set("login",true)
+            storage.set("email",email)
             history.push("/home");
         }).catch((e) => {
             alert(e.message)

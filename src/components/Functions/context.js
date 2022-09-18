@@ -21,7 +21,7 @@ const storage = new Storage();
 storage.create();
 const UserProvider = ({ children }) => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("abc@gmaill.com")
+  const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("");
   const [cattegories, setCattegories] = useState("")
   const [coins, setCoins] = useState(<IonSpinner  />)
@@ -46,7 +46,7 @@ const UserProvider = ({ children }) => {
     });
   });
   // setCattegories()
-},[])
+},[email])
 localStorage.setItem("id",id)
   return <UserContext.Provider value={{ name: name, phone: phone, coins: coins, cattegories: cattegories, email: email }} >
     {children}
