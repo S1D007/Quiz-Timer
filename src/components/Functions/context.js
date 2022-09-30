@@ -32,33 +32,36 @@ storage.create();
     const [phone,setPhone] = useState("");
     const [cattegories,setCattegories] = useState("")
     const [coins,setCoins] = useState(<IonSpinner></IonSpinner>)
-    const id = localStorage.getItem("id")
+    // const id = localStorage.getItem("id")
     const user = collection(db, "users")
-    const doooc = async() =>{
-      const docum = doc(db,"users",id)
-      const ref = await getDoc(docum)
-      setName(ref.data().name)
-      setPhone(ref.data().phone)
-      setCoins(ref.data().coin)
-      setCattegories(ref.data().cattegories)
+    // const doooc = async() =>{
+    //   const docum = doc(db,"users",id)
+    //   const ref = await getDoc(docum)
+    //   setName(ref.data().name)
+    //   setPhone(ref.data().phone)
+    //   setCoins(ref.data().coin)
+    //   setCattegories(ref.data().cattegories)
+    // }
+    // useEffect(()=>{
+    //   doooc()
+    // },[])
+    // console.log(ref.data());
+    const q = query(user, where("email", "==", email?email:""))
+    const getDetailsOfUsers = async()=>{
+      
+      const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+       setName(doc.data().name)
+      setPhone(doc.data().phone)
+      setCoins(doc.data().coin)
+      setCattegories(doc.data().cattegories)
+    });
     }
     useEffect(()=>{
-      doooc()
-    },[])
-    // console.log(ref.data());
-  //   const q = query(user, where("email", "==", email?email:""))
-  //   const getDetailsOfUsers = async()=>{
-      
-  //     const querySnapshot = await getDocs(q);
-  //   querySnapshot.forEach((doc) => {
-  //     // doc.data() is never undefined for query doc snapshots
- 
-  //   });
-  //   }
-  //   useEffect(()=>{
-  //     getDetailsOfUsers()
-  //   })
-  // // setCattegories()
+      getDetailsOfUsers()
+    })
+  // setCattegories() 
   return <UserContext.Provider value={{ name: name, phone: phone, coins: coins, cattegories: cattegories, email: email }} >
     {children}
   </UserContext.Provider>

@@ -3,34 +3,41 @@ import { IonApp, IonSpinner, IonButtons, IonContent, IonIcon, IonImg, IonPage, I
 import React, { useEffect, useLayoutEffect, useState, useContext } from 'react'
 import coin from "../components/Images/coin.png"
 import { alarmOutline } from "ionicons/icons"
-import { UserContext } from '../components/Functions/context';
-import { doc, updateDoc } from "firebase/firestore"
+// import { UserContext } from '../components/Functions/context';
+import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from '../config/firebase'
 import "./css/Quiz.css"
-import { Redirect } from 'react-router';
-import HomeScreen from './HomeScreen';
 function Quiz({history}) {
-    const userDetails = useContext(UserContext)
+    const [queq,setQueq] = useState('')
+
+    // console.log(queq)
+    // const userDetails = useContext(UserContext)
     const [counter, setCounter] = React.useState(5);
     const [queCount, setQueCount] = useState(0)
     const [bgColor, setBgColor] = useState("white")
-    const [que, setQuestions] = useState([])
+    const [que, setOptions] = useState([])
     const [selected, setSelected] = useState(false)
     const [bgAnswer, setBgAnswer] = useState("")
     const [index, setIndex] = useState()
+    const [isnull,setIsNull] = useState(false)
+    // const []
     const [queIndex,setQueIndex] = useState()
     const [questionNumbering,setQuestionNumbering] = useState([])
-    const [message,setMessage] = useState("")
     const [countCoin, setCountCoin] = useState(<IonSpinner />)
     const [presentAlert] = useIonAlert();
+    const [questionsFromBackend,setQuestionsFromBackend] = useState([])
     const id = localStorage.getItem("id")
-    const docRef = doc(db, "users", id)
+    const docRef = doc(db,"users",id)
+    useEffect(()=>{
+        const doooc = async() =>{
+          const docum = doc(db,"users",id)
+          const ref = await getDoc(docum)
+          setCountCoin(ref.data().coin)
+        }
+      doooc()
+    },[id,queCount])
     const counterRef = React.useRef(counter);
     const number =  localStorage.getItem("queNumber")
-    // console.log(typeof 5)
-    useEffect(() => {
-        setCountCoin(userDetails.coins)
-    }, [userDetails])
     useLayoutEffect(() => {
         const timeInterval = () => {
             const interval = setInterval(() => {
@@ -58,9 +65,24 @@ function Quiz({history}) {
       color:color
     });
   };
-    useLayoutEffect(() => {
-        setQuestions(handdleShuffle([...questions[queCount].opt, questions[queCount].a]))
-    }, [queCount])
+//   const email = localstorage.getItem("email")
+const email = localStorage.getItem("emailOfUser")
+  const getQuestionsFromBackend = async() =>{
+    const url = `http://backquery.online:1111/get-question-with-params?category=General%20Knowledge&level=hard&limit=10&email=${email}`
+    const data = await fetch(url)
+    const res = await data.json()
+    setQuestionsFromBackend(res)
+    if(res === []){
+        setIsNull(true)
+    }
+
+}
+useEffect(()=>{
+    getQuestionsFromBackend()
+},[])
+useEffect(()=>{
+    setOptions(handdleShuffle([questionsFromBackend[queCount]?.options.flat(),questionsFromBackend[queCount]?.correctAnswer].flat()))
+},[queCount,questionsFromBackend])
     const handdleShuffle = (options) => {
         return options.sort(() => Math.random() - 0.5)
     }
@@ -210,6 +232,9 @@ function Quiz({history}) {
         
     }
 
+
+    // console.log(questionsFromBackend[6]?.question)
+
     const handdleSelect = (i) => {if (i === questions[queCount].a) {
         setSelected(true)
             setBgAnswer("correct")
@@ -321,6 +346,8 @@ function Quiz({history}) {
                                         paddingTop: "3px",
                                         paddingBottom: "3px",
                                         borderRadius: "50px",
+                                        margin:"1px",
+                                        marginTop:"40px"
                                     }} >{e}</h3>
                                 </div>
                             })
@@ -331,7 +358,7 @@ function Quiz({history}) {
                     }} >
                         <h3 style={{
                             fontWeight: "bold"
-                        }} >{questions[queCount].q}</h3>
+                        }} >{questionsFromBackend[queCount]?.question}</h3>
                         <div style={{
                             display: "table-row",
                             justifyContent: "space-between",

@@ -1,4 +1,4 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading, IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
@@ -12,7 +12,7 @@ function HomeScreen({ history }) {
   const [present, dismiss] = useIonLoading();
   const [numb, setNumber] = useState(1)
   const userDetails = React.useContext(UserContext)
-  const [coinVAl, setCoinVAL] = useState(null)
+  const [coinVAl, setCoinVAL] = useState(<IonSpinner/>)
   const [cat, setCat] = useState([])
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
@@ -41,6 +41,16 @@ function HomeScreen({ history }) {
       }
     });
   });
+//   const getQuestionsFromBackend = async() =>{
+//     const url = `http://backquery.online:1111/get-question-with-params?category=General%20Knowledge&level=hard&limit=10&email=abac@gmaiil.com`
+//     const data = await fetch(url)
+//     const res = await data.json()
+//     setQuestionsFromBackend(res)
+//     // console.log(res[0].ques)
+// }
+// useEffect(()=>{
+//     getQuestionsFromBackend()
+// },[])
   // useEffect(() => {
   //   setCoinVAL(userDetails.coins)
   //   setCat(userDetails.cattegories)
