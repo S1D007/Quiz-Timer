@@ -1,20 +1,22 @@
 import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading, IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import coin from "../components/Images/coin.png"
 import { menu } from "ionicons/icons"
-import { person } from "ionicons/icons"
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
+import axios from "axios"
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../config/firebase'
-import { UserContext } from '../components/Functions/context';
-import { Route, Switch } from 'react-router'
 function HomeScreen({ history }) {
   const [present, dismiss] = useIonLoading();
+  const [spinner,setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
-  const userDetails = React.useContext(UserContext)
-  const [coinVAl, setCoinVAL] = useState(<IonSpinner/>)
+  const [coinVAl, setCoinVAL] = useState(<IonSpinner />)
   const [cat, setCat] = useState([])
+  const [loading,setLoading] = useState(true)
+  const [currCategory,setCurrCategory] = useState('')
+  const [currLevel,setLevel] = useState()
   const [presentAlert] = useIonAlert();
+  const[clicked,setClicked] = useState(false)
   const ionRouter = useIonRouter();
   document.addEventListener('ionBackButton', (ev) => {
     ev.detail.register(-1, () => {
@@ -41,49 +43,62 @@ function HomeScreen({ history }) {
       }
     });
   });
-//   const getQuestionsFromBackend = async() =>{
-//     const url = `http://backquery.online:1111/get-question-with-params?category=General%20Knowledge&level=hard&limit=10&email=abac@gmaiil.com`
-//     const data = await fetch(url)
-//     const res = await data.json()
-//     setQuestionsFromBackend(res)
-//     // console.log(res[0].ques)
-// }
-// useEffect(()=>{
-//     getQuestionsFromBackend()
-// },[])
-  // useEffect(() => {
-  //   setCoinVAL(userDetails.coins)
-  //   setCat(userDetails.cattegories)
-  // },[userDetails])
   const id = localStorage.getItem("id")
-  const docRef = doc(db,"users",id)
-  // console.log(docRef);
-  // const id = localStorage.getItem("id")
-  // const user = collection(db, "users")
-  const doooc = async() =>{
-    const docum = doc(db,"users",id)
-    const ref = await getDoc(docum)
-    // setName(ref.data().name)
-    // setPhone(ref.data().phone)
-    setCoinVAL(ref.data().coin)
-    // setCattegories(ref.data().cattegories)
+  const docRef = doc(db, "users", id)
+  const handdleClick = () =>{
+    setSpinner(true)
+    getQuestionsFromBackend()
   }
-  useEffect(()=>{
+  if(!loading){
+    history.push("/quizScreen")
+    updateDoc(docRef, {
+      coin: coinVAl - 5
+    })
+  }
+  useEffect(() => {
+    const doooc = async () => {
+      const docum = doc(db, "users", id)
+      const ref = await getDoc(docum)
+      setCoinVAL(ref.data().coin)
+      setCat(ref.data().categories)
+    }
     doooc()
-  },[])
-  localStorage.setItem("queNumber",numb)
+  }, [id])
+  const getQuestionsFromBackend = () =>{
+    const email = localStorage.getItem("emailOfUser")
+    const url = `http://backquery.online:1111/get-question-with-params?category=${currCategory}&level=${currLevel.toLowerCase()}&limit=${numb}&email=${email}`
+    try{
+        axios.get(url).then(response => {
+          // <Questions.Provider value={response.data} >
+          // </Questions.Provider>
+          localStorage.setItem('question',JSON.stringify(response.data))
+          console.log(response.data)
+          setLoading(false)
+          }).catch((e)=>{
+            alert(e)
+          })
+    }catch(e){
+        alert(e)
+    }
+}
+  localStorage.setItem("queNumber", numb)
+  const nextPage = () => {
+    history.push("/quizScreen")
+    updateDoc(docRef, {
+      coin: coinVAl - 5
+    })
+  }
   return (
-
-    <IonPage 
-     style={{
-      backgroundColor: "#0D1117",
-      color: "white"
-    }} >
+    <IonPage
+      style={{
+        backgroundColor: "#0D1117",
+        color: "white"
+      }} >
       <IonApp fullscreen={true} style={{
         backgroundColor: "#0D1117",
         color: "white",
       }} >
-      
+
         <IonMenu color={"dark"} content-id="main-content">
           <IonHeader color={"dark"} >
             <IonToolbar color='dark'>
@@ -198,15 +213,17 @@ function HomeScreen({ history }) {
 
               }} >
                 <IonItem>
-                  <IonSelect interface="action-sheet" placeholder="Choose a Category">
-          {/* {
-            cat.map((e)=>{
-              return <IonSelectOption>
+                  <IonSelect interface="action-sheet" onIonChange={(e)=>{
+                setCurrCategory(e.detail.value)
+              }} placeholder="Choose a Category">
+                    {
+            cat?.map((e)=>{
+              return <IonSelectOption key={e.id} value = {e.name} >
                 {e.name}
               </IonSelectOption>
             })
-          } */}
-        </IonSelect>
+          }
+                  </IonSelect>
                 </IonItem>
               </IonList>
             </div>
@@ -218,8 +235,11 @@ function HomeScreen({ history }) {
                 borderRadius: "50px",
 
               }} >
-                <IonItem  >
-                  <IonSelect interface="action-sheet" placeholder="Level">
+                <IonItem >
+                  <IonSelect interface="action-sheet" placeholder="Level" onIonChange={(e)=>{
+                    setLevel(e.detail.value)
+                  }}
+                  >
                     <IonSelectOption value="Easy">Easy</IonSelectOption>
                     <IonSelectOption value="Medium">Medium</IonSelectOption>
                     <IonSelectOption value="Hard">Hard</IonSelectOption>
@@ -246,15 +266,12 @@ function HomeScreen({ history }) {
               display: "flex",
               justifyContent: "center",
             }} >
-              <IonButton onClick={() =>{ history.push("/quizScreen")
-              updateDoc(docRef,{
-                coin:coinVAl - 5
-              })}
+              <IonButton onClick={()=>handdleClick()
               } color={"success"} >
                 <h1 color='dark' style={{
                   margin: "50px",
                   color: "#000"
-                }} >Start</h1>
+                }} >{spinner?<IonSpinner/>:"Start"}</h1>
               </IonButton>
             </div>
           </div>

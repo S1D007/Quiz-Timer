@@ -10,23 +10,63 @@ import {collection, addDoc, Timestamp, onSnapshot, where, query} from 'firebase/
 let category = [
   {
     id: 1,
-    name: 'Maths',
+    name: 'General Knowledge',
   },
   {
     id: 2,
-    name: 'Science',
+    name: 'Science & Nature',
   },
   {
     id: 3,
-    name: 'English',
+    name: 'Science: Computers',
   },
   {
     id: 4,
-    name: 'Sports',
+    name: 'Science: Mathematics',
   },
   {
     id: 5,
-    name: 'Computer',
+    name: 'Mythology',
+  },
+  {
+    id: 6,
+    name: 'Sports',
+  },
+  {
+    id: 7,
+    name: 'Geography',
+  },
+  {
+    id: 15,
+    name: 'History',
+  },
+  {
+    id: 9,
+    name: 'Politics',
+  },
+  {
+    id: 10,
+    name: 'Animals',
+  },
+  {
+    id: 11,
+    name: 'Vehicles',
+  },
+  {
+    id: 12,
+    name: 'Entertainment: Comics',
+  },
+  {
+    id: 13,
+    name: 'Science: Gadgets',
+  },
+  {
+    id: 14,
+    name: 'Entertainment: Japanese Anime & Manga',
+  },
+  {
+    id: 15,
+    name: 'Entertainment: Cartoon & Animations',
   },
 ];
 const compareWith = (o1, o2) => {
@@ -44,13 +84,13 @@ const Profile = ({ history }) => {
   const [currentCategory, setCurrentCategory] = useState([]);
   const [phone,setPhone] = useState(null)
   const [name,setName] = useState(null)
-  const email = React.useContext(EmailContext)
+  const email = localStorage.getItem("emailOfUser")
   const onClickHanddler = async () => {
     const store = new Storage();
     await store.create();
     try {
       await addDoc(collection(db, 'users'), {
-        cattegories:currentCategory,
+        categories:currentCategory,
         email:email,
         phone:phone,
         name:name,
