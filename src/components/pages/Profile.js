@@ -1,12 +1,10 @@
 import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg, IonApp } from '@ionic/react';
 import { call, man,mail } from "ionicons/icons"
-import React, { useEffect, useLayoutEffect, useState, } from 'react'
-import ProfileImg from "../components/Images/profile.gif"
-import { EmailContext } from '../components/Functions/context';
+import React, { useEffect, useState, } from 'react'
+import ProfileImg from "../Images/profile.gif"
 import { Storage } from '@ionic/storage';
-import {db} from "../config/firebase"
+import {db} from "../../config/firebase"
 import {collection, addDoc, Timestamp, onSnapshot, where, query} from 'firebase/firestore'
-// import {category} from "./json/category"
 let category = [
   {
     id: 1,
@@ -69,6 +67,9 @@ let category = [
     name: 'Entertainment: Cartoon & Animations',
   },
 ];
+
+localStorage.setItem("categories",JSON.stringify(category))
+
 const compareWith = (o1, o2) => {
   if (!o1 || !o2) {
     return o1 === o2;
@@ -84,10 +85,10 @@ const Profile = ({ history }) => {
   const [currentCategory, setCurrentCategory] = useState([]);
   const [phone,setPhone] = useState(null)
   const [name,setName] = useState(null)
+  localStorage.setItem("name",name)
+  localStorage.setItem("phone",phone)
   const email = localStorage.getItem("emailOfUser")
   const onClickHanddler = async () => {
-    const store = new Storage();
-    await store.create();
     try {
       await addDoc(collection(db, 'users'), {
         categories:currentCategory,
@@ -100,8 +101,6 @@ const Profile = ({ history }) => {
     } catch (err) {
       alert(err)
     }
-    await store.set("profile",true)
-    store.set("email",email)
     history.replace("/login")
   } 
   useEffect(()=>{

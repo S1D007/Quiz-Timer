@@ -1,18 +1,12 @@
 // import { questions } from './json/questions';
 import { IonApp, IonSpinner, IonIcon, IonImg, IonPage, useIonAlert, useIonToast } from '@ionic/react'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import coin from "../components/Images/coin.png"
-// import axios from "axios"
+import React, { useEffect, useState } from 'react'
+import coin from "../Images/coin.png"
 import { alarmOutline } from "ionicons/icons"
-// import { UserContext } from '../components/Functions/context';
 import { doc, getDoc, updateDoc } from "firebase/firestore"
-import { db } from '../config/firebase'
+import { db } from '../../config/firebase'
 import "./css/Quiz.css"
 function Quiz({ history }) {
-    // const [queq,setQueq] = useState('')
-
-    // console.log(queq)
-    // const userDetails = useContext(UserContext)
     const [counter, setCounter] = React.useState(5);
     const [queCount, setQueCount] = useState(0)
     const [bgColor, setBgColor] = useState("white")
@@ -21,8 +15,6 @@ function Quiz({ history }) {
     const [bgAnswer, setBgAnswer] = useState("")
     const [index, setIndex] = useState()
     const [stop, setStop] = useState(false)
-    // const [isnull,setIsNull] = useState(false)
-    // const []
     const [queIndex, setQueIndex] = useState()
     const [questionNumbering, setQuestionNumbering] = useState([])
     const [countCoin, setCountCoin] = useState(<IonSpinner />)
@@ -71,7 +63,6 @@ function Quiz({ history }) {
             color: color
         });
     };
-    //   const email = localstorage.getItem("email")
 
     useEffect(() => {
         setOptions(handdleShuffle([questionsFromBackend[queCount]?.options.flat(), questionsFromBackend[queCount]?.correctAnswer].flat()))
@@ -120,6 +111,7 @@ function Quiz({ history }) {
     useEffect(() => {
         setQueIndex((e) => questionNumbering[queCount] - 1)
     }, [queCount, questionNumbering])
+
     useEffect(() => {
         switch (counter) {
             case 5:
@@ -184,9 +176,7 @@ function Quiz({ history }) {
                 default:
                     setCountCoin(countCoin)
             }
-
         } else {
-
             switch (counter) {
                 case 5:
                     presentToast(`Wrong Answer, '${5 * 2} points minus'`, "danger")
@@ -243,6 +233,7 @@ function Quiz({ history }) {
             setStop(true)
             presentAlert({
                 header: 'Great! Well Done',
+                cssClass:"loader",
                 buttons: [
                     {
                         text: 'Go Back Home',
@@ -354,9 +345,6 @@ function Quiz({ history }) {
                     <div style={{
                         display: "flex",
                         flexDirection: "column",
-                        // justifyContent: "space-between",
-                        // alignItems:"center",
-                        // alignContent:"center"
                     }} >
                         {que.map((optionInArrayOfQuestions, indexNumber) => {
                             return <div key={indexNumber} style={{

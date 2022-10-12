@@ -2,10 +2,10 @@ import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage, useIonLoading
 import React, { useLayoutEffect, useState,createContext, useEffect } from 'react';
 import { getAuth, createUserWithEmailAndPassword, } from "firebase/auth";
 // import LoginAnim from "../components/Images/loginGIF.gif";
-import Back from "../components/Images/chevron-back-outline.svg"
+import Back from "../Images/chevron-back-outline.svg"
 import { Storage } from '@ionic/storage';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../../config/firebase';
 
 export const EmailContext = createContext()
 function Login({ history }) {
@@ -20,7 +20,7 @@ function Login({ history }) {
         !email&&!pass&&!cPass?alert("Feilds are Required!"):
         present({
             message: 'Loading...',
-            duration: 1000,
+            duration: 2000,
             spinner: 'circles'
           })
         createUserWithEmailAndPassword(auth, email, pass).then(() => {
@@ -63,7 +63,7 @@ function Login({ history }) {
                     fontFamily: "sans-serif",
                     color:"white"
                 }} ><IonIcon src={Back} onClick={() => {
-                    history.go(-1)
+                    history.replace("/login")
                 }} alt="Logo" style={{
                     display: "inline-block",
                     color:"white"
@@ -190,8 +190,32 @@ function Login({ history }) {
                         color: "white"
                     }} onClick={() => {
                         history.push("/login")
+                        
                     }} >
                         Login
+                    </span>
+                </h6>
+            </div>
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "5pt"
+
+            }} >
+                <h6 style={{
+                    fontWeight: "lighter",
+                    color:"white"
+                }} >
+                    Want To Practice Game?
+                    <span style={{
+                          fontWeight: "bold",
+                        padding: "5px",
+                        color: "white"
+                    }} onClick={() => {
+                        history.push("/practice")
+                        localStorage.setItem("coins",100)
+                    }} >
+                         Play as Guest
                     </span>
                 </h6>
             </div>

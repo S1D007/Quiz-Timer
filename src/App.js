@@ -20,14 +20,16 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 // pages
-import OnBoarding from './components/OnBoarding';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import HomeScreen from './pages/HomeScreen';
+import OnBoarding from './components/pages/OnBoarding';
+import Login from './components/pages/Login';
+import Signup from './components/pages/Signup';
+import HomeScreen from './components/pages/HomeScreen';
 // import Home from './pages/Home';
-import Profile from './pages/Profile'
-import UpdateProfile from './pages/UpdateProfile'
-import Quiz from './pages/Quiz'
+import Profile from './components/pages/Profile'
+import UpdateProfile from './components/pages/UpdateProfile'
+import PracticeHome from "./components/pages/PracticeHome"
+import Quiz from './components/pages/Quiz'
+import PracticeQuiz from "./components/pages/PracticeQuiz"
 setupIonicReact();
 const App = () => {
   return (
@@ -37,10 +39,12 @@ const App = () => {
     <Route exact path={"/signup"} component={Signup}  />
     <Route exact path={"/login"} component={Login}  />
     <Route id={"home"} exact path={"/home"} component={HomeScreen}  />
+    <Route id={"home"} exact path={"/practice"} component={PracticeHome}  />
     <Route exact path={"/profile"} component={Profile}  />
     <Route exact path={"/quizScreen"} component={Quiz}  />
+    <Route exact path={"/practiceQuiz"} component={PracticeQuiz}  />
     <Route exact path={"/updateProfile"} component={UpdateProfile}  />
-  </IonApp>
+</IonApp>
   </IonReactRouter>
   )
 

@@ -151,11 +151,6 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-tint: #383a3e;
   }
 
-  /*
-   * iOS Dark Theme
-   * -------------------------------------------
-   */
-
   .ios body {
     --ion-background-color: #101010;
     --ion-background-color-rgb: 0,0,0;
@@ -236,9 +231,6 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: #1e1e1e;
   }
-}
-.IonItem{
-  /* --ion-item-background: white !important; */
 }
 @media (max-height: 680px) {
 }
@@ -446,4 +438,10 @@ nav {
 #menuToggle input:checked ~ ul
 {
   transform: none;
+}
+
+
+
+.Backdrop{
+  background-color:"#000000";
 }

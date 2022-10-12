@@ -1,10 +1,10 @@
 import { IonButton,IonInput,IonLabel, IonText, IonImg, IonPage, useIonLoading } from '@ionic/react'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Storage } from "@ionic/storage"
-import {app, db} from "../config/firebase"
+import {app, db} from "../../config/firebase"
 
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import Welcome from "../components/Images/welcome.gif"
+import Welcome from "../Images/welcome.gif"
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 
 function Login({ history }) {
@@ -23,6 +23,7 @@ function Login({ history }) {
           })
         signInWithEmailAndPassword(auth, email, pass).then(() => {
             localStorage.setItem("emailOfUser",email)
+            localStorage.setItem("practice",false)
             storage.set("login",true)
             storage.set("email",email)
             history.replace("/home");
@@ -55,13 +56,10 @@ function Login({ history }) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                // marginBottom: "2vw",
                 marginTop: "3vw",
-                // width:"150pt"
             }} >
 
                 <IonImg style={{
-                    // width: "250pt"
                 }} src={Welcome} />
             </div>
             <div style={{
@@ -76,7 +74,6 @@ function Login({ history }) {
                             color: "#818181",
                             fontFamily: "monospace",
                             fontSize: "1.2rem",
-                            // marginTop: "-14vw",
                             textAlign: "center",
                             marginBottom:"5vw"
                         }
@@ -89,11 +86,9 @@ function Login({ history }) {
                 </IonText>
             </div>
             <div style={{
-                // marginTop: "-50pt"
             }} >
                 <div style={{
                     margin: "5%",
-                    // maxWidth:"1000px",
                 }} >
                     <IonLabel >
                         <h2 style={{
@@ -165,6 +160,7 @@ function Login({ history }) {
                         color: "white"
                     }} onClick={() => {
                         history.replace('/signup');
+                        
                     }} >
                         Signup
                     </span>

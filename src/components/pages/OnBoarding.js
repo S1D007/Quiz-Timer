@@ -1,11 +1,9 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Storage } from "@ionic/storage";
-import { Redirect } from 'react-router-dom';
-import { IonSlides, IonSlide, IonContent, IonImg, IonButton, IonText, IonPage, useIonLoading, IonRouterOutlet } from '@ionic/react';
-import onBoarding1 from "./Images/onBoarding1.svg"
-import onBoarding2 from "./Images/onBoarding2.svg"
-import onBoarding3 from "./Images/onBoarding3.svg"
-import App from '../App';
+import { IonSlides, IonSlide, IonImg, IonButton, IonText, useIonLoading, IonRouterOutlet } from '@ionic/react';
+import onBoarding1 from "../Images/onBoarding1.svg"
+import onBoarding2 from "../Images/onBoarding2.svg"
+import onBoarding3 from "../Images/onBoarding3.svg"
 // Optional parameters to pass to the swiper instance.
 // See https://swiperjs.com/swiper-api for valid options.
 const slideOpts = {
@@ -63,11 +61,8 @@ const slideOpts = {
             const { slides, activeIndex, $wrapperEl } = swiper;
             slides
                 .transition(duration)
-            //   .find('.swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left')
-            //   .transition(duration);
             if (swiper.params.virtualTranslate && duration !== 0) {
                 let eventTriggered = false;
-                // eslint-disable-next-line
                 slides.eq(activeIndex).transitionEnd(function onTransitionEnd() {
                     if (eventTriggered) return;
                     if (!swiper || swiper.destroyed) return;
@@ -115,7 +110,6 @@ const OnBoarding = ({ history }) => {
             backgroundColor: "#0D1117"
         }} >
             <div style={{
-                // marginTop: "20vw"
             }} >
                 <IonSlides className='' pager={true} style={{
                     margin: "0.1rem",
@@ -123,7 +117,6 @@ const OnBoarding = ({ history }) => {
                     display: "flex",
                     alignItems: "center",
                     marginTop:"20pt"
-                    // display: "flex",
                 }} options={slideOpts}>
                     <IonSlide style={{
                         display: "block",
@@ -136,11 +129,8 @@ const OnBoarding = ({ history }) => {
                             marginBottom:"1.5rem "
                         }} src={onBoarding1} />
                         <IonText color={"secondary"} style={{
-                            // color:"white",
                             fontSize: "10vw",
                             fontWeight: "bold",
-                            // marginTop: "50pt",
-                            // marginBottom: "1.5rem"
                         }} >Test Your Knowledge <span
                             style={{
                                 fontSize: "1.2rem",
@@ -166,14 +156,14 @@ const OnBoarding = ({ history }) => {
                             fontWeight: "bold",
                             marginTop: "2rem",
                             marginBottom: "1.5rem",
-                        }} >Earn Coins for Games<span style={{
+                        }} >Earn Coins for Games you play<span style={{
                             color: "#FFFFB6",
                             marginTop: "2rem",
                             display: "inline-block",
                             fonrWeight: "light",
                             fontSize: "5vw",
                         }}>
-                                In-Game Coins are So Usefull While You play Games
+                                In-Game Coins can be usefull to redeem Rewards
                             </span> </IonText>
                     </IonSlide>
                     <IonSlide style={{

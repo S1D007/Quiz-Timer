@@ -1,34 +1,32 @@
 import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading, IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
-import React, { createContext, useEffect, useState } from 'react'
-import coin from "../components/Images/coin.png"
-import { menu } from "ionicons/icons"
+import React, {  useState } from 'react'
+import coin from "../Images/coin.png"
 import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '../config/firebase'
-function HomeScreen({ history }) {
+import { db } from '../../config/firebase'
+function PracticeHome({ history }) {
   const [present, dismiss] = useIonLoading();
   const [spinner,setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
-  const [coinVAl, setCoinVAL] = useState(<IonSpinner />)
   const [cat, setCat] = useState([])
   const [loading,setLoading] = useState(true)
   const [currCategory,setCurrCategory] = useState('')
   const [currLevel,setLevel] = useState()
   const [presentAlert] = useIonAlert();
-  const[clicked,setClicked] = useState(false)
   const ionRouter = useIonRouter();
+  const coins = localStorage.getItem('coins')
   document.addEventListener('ionBackButton', (ev) => {
     ev.detail.register(-1, () => {
       if (!ionRouter.canGoBack()) {
         presentAlert({
-          header: 'Do you really want to Exit ?',
+          header: 'Do you really want to Exit Practice ?',
           buttons: [
             {
               text: 'No',
               role: 'cancel',
               handler: () => {
-                history.push("/home")
+                history.replace("/home")
               },
             },
             {
@@ -43,34 +41,20 @@ function HomeScreen({ history }) {
       }
     });
   });
-  const id = localStorage.getItem("id")
-  const docRef = doc(db, "users", id)
   const handdleClick = () =>{
     setSpinner(true)
     getQuestionsFromBackend()
   }
+  
   if(!loading){
-    history.push("/quizScreen")
-    updateDoc(docRef, {
-      coin: coinVAl - 5
-    })
+    history.push("/practiceQuiz")
+    localStorage.setItem("coins",coins-5)
   }
-  useEffect(() => {
-    const doooc = async () => {
-      const docum = doc(db, "users", id)
-      const ref = await getDoc(docum)
-      setCoinVAL(ref.data().coin)
-      setCat(ref.data().categories)
-    }
-    doooc()
-  }, [id])
   const getQuestionsFromBackend = () =>{
-    const email = localStorage.getItem("emailOfUser")
-    const url = `http://backquery.online:1111/get-question-with-params?category=${currCategory}&level=${currLevel.toLowerCase()}&limit=${numb}&email=${email}`
+    console.log("Fetching")
+    const url = `http://backquery.online:1111/practice?category=${currCategory}&limit=${numb}`
     try{
         axios.get(url).then(response => {
-          // <Questions.Provider value={response.data} >
-          // </Questions.Provider>
           localStorage.setItem('question',JSON.stringify(response.data))
           console.log(response.data)
           setLoading(false)
@@ -82,12 +66,68 @@ function HomeScreen({ history }) {
     }
 }
   localStorage.setItem("queNumber", numb)
-  const nextPage = () => {
-    history.push("/quizScreen")
-    updateDoc(docRef, {
-      coin: coinVAl - 5
-    })
-  }
+  let category = [
+    {
+      id: 1,
+      name: 'General Knowledge',
+    },
+    {
+      id: 2,
+      name: 'Science & Nature',
+    },
+    {
+      id: 3,
+      name: 'Science: Computers',
+    },
+    {
+      id: 4,
+      name: 'Science: Mathematics',
+    },
+    {
+      id: 5,
+      name: 'Mythology',
+    },
+    {
+      id: 6,
+      name: 'Sports',
+    },
+    {
+      id: 7,
+      name: 'Geography',
+    },
+    {
+      id: 8,
+      name: 'History',
+    },
+    {
+      id: 9,
+      name: 'Politics',
+    },
+    {
+      id: 10,
+      name: 'Animals',
+    },
+    {
+      id: 11,
+      name: 'Vehicles',
+    },
+    {
+      id: 12,
+      name: 'Entertainment: Comics',
+    },
+    {
+      id: 13,
+      name: 'Science: Gadgets',
+    },
+    {
+      id: 14,
+      name: 'Entertainment: Japanese Anime & Manga',
+    },
+    {
+      id: 15,
+      name: 'Entertainment: Cartoon & Animations',
+    },
+  ];
   return (
     <IonPage
       style={{
@@ -99,50 +139,7 @@ function HomeScreen({ history }) {
         color: "white",
       }} >
 
-        <IonMenu color={"dark"} content-id="main-content">
-          <IonHeader color={"dark"} >
-            <IonToolbar color='dark'>
-              <IonTitle>Menu</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-
-          <IonContent color={"dark"} >
-            <IonList>
-              <IonListHeader>
-                Account
-              </IonListHeader>
-              <IonMenuToggle auto-hide="false">
-                <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
-                  <IonLabel onClick={() => history.push("/updateProfile")} >
-                    Profile
-                  </IonLabel>
-                </IonItem>
-              </IonMenuToggle>
-            </IonList>
-          </IonContent>
-        </IonMenu>
-
-        <div style={{
-          backgroundColor: "#0D1117"
-        }} className="ion-page" id="main-content">
-          <IonHeader style={{
-            backgroundColor: "#0D1117"
-          }} >
-            <IonToolbar style={{
-              backgroundColor: "#0D1117"
-            }} >
-              <IonButtons slot="start">
-                <IonMenuToggle>
-                  <IonButton>
-                    <IonIcon slot="icon-only" icon={menu}></IonIcon>
-                  </IonButton>
-                </IonMenuToggle>
-              </IonButtons>
-              <IonTitle alignItems={"center"} >Quiz Home</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-        </div>
+        
         <div style={{
           background: " linear-gradient(to right, #b993d6, #8ca6db)", /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
           width: "150px",
@@ -172,7 +169,7 @@ function HomeScreen({ history }) {
             fontSize: "1.5rem",
             fontWeight: "bold",
             fontFamily: "monospace",
-          }} >{coinVAl}</span>
+          }} >{coins}</span>
         </div>
         <div style={{
           // display: "flex",
@@ -217,7 +214,7 @@ function HomeScreen({ history }) {
                 setCurrCategory(e.detail.value)
               }} placeholder="Choose a Category">
                     {
-            cat?.map((e)=>{
+            category?.map((e)=>{
               return <IonSelectOption key={e.id} value = {e.name} >
                 {e.name}
               </IonSelectOption>
@@ -236,7 +233,7 @@ function HomeScreen({ history }) {
 
               }} >
                 <IonItem >
-                  <IonSelect interface="action-sheet" placeholder="Level" onIonChange={(e)=>{
+                  <IonSelect disabled="true" interface="action-sheet" placeholder="Level" onIonChange={(e)=>{
                     setLevel(e.detail.value)
                   }}
                   >
@@ -283,4 +280,4 @@ function HomeScreen({ history }) {
   )
 }
 
-export default HomeScreen
+export default PracticeHome
