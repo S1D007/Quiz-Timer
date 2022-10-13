@@ -46,6 +46,7 @@ function HomeScreen({ history }) {
   const docRef = doc(db, "users", id)
   const handdleClick = () =>{
     setSpinner(true)
+    setLoading(true)
     if(currCategory === "random") {
       const url = `http://backquery.online:1111/get-questions?limit=${numb}`
       try{
@@ -94,6 +95,11 @@ function HomeScreen({ history }) {
     }
 }
   localStorage.setItem("queNumber", numb)
+  const minus = useCallback((e) => setNumber(numb - 1),[numb])
+const plus = useCallback((e) => setNumber(numb + 1),[numb])
+const setCategory = useCallback((e)=>{
+  setCurrCategory(e.detail.value)
+},[])
   return (
     <IonPage
       style={{
@@ -219,9 +225,7 @@ function HomeScreen({ history }) {
 
               }} >
                 <IonItem>
-                  <IonSelect interface="action-sheet" onIonChange={(e)=>{
-                setCurrCategory(e.detail.value)
-              }} placeholder="Choose a Category">
+                  <IonSelect interface="action-sheet" onIonChange={setCategory} placeholder="Choose a Category">
               <IonSelectOption value= "random" >
                 Random
               </IonSelectOption>
@@ -263,11 +267,11 @@ function HomeScreen({ history }) {
             }} >
 
               {/* <h1>Numbers of Questions</h1> */}
-              <IonButton disabled={numb === 1 ? true : false} onClick={(e) => setNumber(numb - 1)} color="danger" >-</IonButton>
+              <IonButton disabled={numb === 1 ? true : false} onClick={minus} color="danger" >-</IonButton>
               <IonInput type='number' style={{
                 marginTop: "-15px"
               }} value={numb} disabled={true} color="dark" />
-              <IonButton disabled={numb === 10 ? true : false} onClick={(e) => setNumber(numb + 1)}
+              <IonButton disabled={numb === 10 ? true : false} onClick={plus}
                 color="success" >+</IonButton>
             </div>
             <div style={{

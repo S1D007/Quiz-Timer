@@ -1,21 +1,16 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading, IonSpinner } from '@ionic/react'
+import { IonApp, IonButton,  IonImg, IonInput, IonItem, IonList,  IonPage,  IonSelect, IonSelectOption, useIonAlert, useIonRouter, IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
-import React, {  useState } from 'react'
+import React, {  useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import axios from "axios"
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '../../config/firebase'
+import {category} from  "../category.js"
 function PracticeHome({ history }) {
-  const [present, dismiss] = useIonLoading();
   const [spinner,setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
-  const [cat, setCat] = useState([])
   const [loading,setLoading] = useState(true)
   const [currCategory,setCurrCategory] = useState('')
-  const [currLevel,setLevel] = useState()
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
-  const coins = localStorage.getItem('coins')
   document.addEventListener('ionBackButton', (ev) => {
     ev.detail.register(-1, () => {
       if (!ionRouter.canGoBack()) {
@@ -41,16 +36,17 @@ function PracticeHome({ history }) {
       }
     });
   });
+
+  useEffect(()=>{
+    const url = `http://backquery.online:1111/get-questions?limit=10`
+    axios.get(url).then((e)=>{
+      console.log(e)
+    })
+  },[])
+
   const handdleClick = () =>{
     setSpinner(true)
-    getQuestionsFromBackend()
-  }
-  
-  if(!loading){
-    history.push("/practiceQuiz")
-    localStorage.setItem("coins",coins-5)
-  }
-  const getQuestionsFromBackend = () =>{
+    setLoading(true)
     console.log("Fetching")
     const url = `http://backquery.online:1111/practice?category=${currCategory}&limit=${numb}`
     try{
@@ -64,70 +60,26 @@ function PracticeHome({ history }) {
     }catch(e){
         alert(e)
     }
-}
+
+  }
+  const coins = localStorage.getItem('coins')
+const conditionalLoading = useCallback(() =>{
+  if(!loading){
+    history.push("/practiceQuiz")
+    localStorage.setItem("coins",coins-5)
+  }
+},[loading,history,coins])
+
+conditionalLoading()
+
+const minus = useCallback((e) => setNumber(numb - 1),[numb])
+const plus = useCallback((e) => setNumber(numb + 1),[numb])
+const setCategory = useCallback((e)=>{
+  setCurrCategory(e.detail.value)
+},[])
+
   localStorage.setItem("queNumber", numb)
-  let category = [
-    {
-      id: 1,
-      name: 'General Knowledge',
-    },
-    {
-      id: 2,
-      name: 'Science & Nature',
-    },
-    {
-      id: 3,
-      name: 'Science: Computers',
-    },
-    {
-      id: 4,
-      name: 'Science: Mathematics',
-    },
-    {
-      id: 5,
-      name: 'Mythology',
-    },
-    {
-      id: 6,
-      name: 'Sports',
-    },
-    {
-      id: 7,
-      name: 'Geography',
-    },
-    {
-      id: 8,
-      name: 'History',
-    },
-    {
-      id: 9,
-      name: 'Politics',
-    },
-    {
-      id: 10,
-      name: 'Animals',
-    },
-    {
-      id: 11,
-      name: 'Vehicles',
-    },
-    {
-      id: 12,
-      name: 'Entertainment: Comics',
-    },
-    {
-      id: 13,
-      name: 'Science: Gadgets',
-    },
-    {
-      id: 14,
-      name: 'Entertainment: Japanese Anime & Manga',
-    },
-    {
-      id: 15,
-      name: 'Entertainment: Cartoon & Animations',
-    },
-  ];
+  
   return (
     <IonPage
       style={{
@@ -210,9 +162,7 @@ function PracticeHome({ history }) {
 
               }} >
                 <IonItem>
-                  <IonSelect interface="action-sheet" onIonChange={(e)=>{
-                setCurrCategory(e.detail.value)
-              }} placeholder="Choose a Category">
+                  <IonSelect interface="action-sheet" onIonChange={setCategory} placeholder="Choose a Category">
                     {
             category?.map((e)=>{
               return <IonSelectOption key={e.id} value = {e.name} >
@@ -233,9 +183,7 @@ function PracticeHome({ history }) {
 
               }} >
                 <IonItem >
-                  <IonSelect disabled="true" interface="action-sheet" placeholder="Level" onIonChange={(e)=>{
-                    setLevel(e.detail.value)
-                  }}
+                  <IonSelect disabled="true" interface="action-sheet" placeholder="Level" 
                   >
                     <IonSelectOption value="Easy">Easy</IonSelectOption>
                     <IonSelectOption value="Medium">Medium</IonSelectOption>
@@ -251,11 +199,11 @@ function PracticeHome({ history }) {
             }} >
 
               {/* <h1>Numbers of Questions</h1> */}
-              <IonButton disabled={numb === 1 ? true : false} onClick={(e) => setNumber(numb - 1)} color="danger" >-</IonButton>
+              <IonButton disabled={numb === 1 ? true : false} onClick={minus} color="danger" >-</IonButton>
               <IonInput type='number' style={{
                 marginTop: "-15px"
               }} value={numb} disabled={true} color="dark" />
-              <IonButton disabled={numb === 10 ? true : false} onClick={(e) => setNumber(numb + 1)}
+              <IonButton disabled={numb === 10 ? true : false} onClick={plus}
                 color="success" >+</IonButton>
             </div>
             <div style={{

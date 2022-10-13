@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
   server: {
     "androidScheme": "http",
     "allowNavigation": [
-      "http://31.187.75.162:1111"
+      "http://backquery.online:1111"
     ]
   }
 };
