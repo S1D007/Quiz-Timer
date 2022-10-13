@@ -43,8 +43,8 @@ function Login({ history }) {
     },[])
         useEffect(()=>{
         const user = collection(db, "users")
-        const q = query(user, where("email", "==", email))
-        onSnapshot(q, (doc) => {
+        const qE = query(user, where("email", "==", email))
+        onSnapshot(qE, (doc) => {
             localStorage.setItem("id",doc.docs[0].id)
   });
 })
