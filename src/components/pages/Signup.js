@@ -1,6 +1,6 @@
 import { IonButton, IonIcon, IonInput, IonLabel, IonText, IonPage, useIonLoading } from '@ionic/react'
 import React, { useLayoutEffect, useState,createContext, useEffect } from 'react';
-import { getAuth, createUserWithEmailAndPassword, } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
 // import LoginAnim from "../components/Images/loginGIF.gif";
 import Back from "../Images/chevron-back-outline.svg"
 import { Storage } from '@ionic/storage';
@@ -47,7 +47,7 @@ function Login({ history }) {
         onSnapshot(q, (doc) => {
             localStorage.setItem("id",doc.docs[0].id)
   });
-        })
+})
 
     return (
         <IonPage style={{
@@ -55,7 +55,6 @@ function Login({ history }) {
             color:"white"
         }} >
             <IonText>
-
                 <h1 style={{
                     fontWeight: "bold",
                     margin: "5%",
@@ -69,7 +68,6 @@ function Login({ history }) {
                     color:"white"
                 }} /></h1>
             </IonText>
-            
             <div style={{
                 display: "flex",
                 justifyContent: "center",

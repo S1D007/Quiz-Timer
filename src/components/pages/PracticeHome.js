@@ -42,7 +42,7 @@ function PracticeHome({ history }) {
     axios.get(url).then((e)=>{
       console.log(e)
     })
-  },[])
+  },[]) 
 
   const handdleClick = () =>{
     setSpinner(true)
