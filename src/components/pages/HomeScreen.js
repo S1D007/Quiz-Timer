@@ -1,13 +1,12 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonLoading, useIonLoading, IonSpinner } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter,  IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
-import React, { createContext, useCallback, useEffect, useState } from 'react'
+import React, {  useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import { menu } from "ionicons/icons"
 import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
 function HomeScreen({ history }) {
-  const [present, dismiss] = useIonLoading();
   const [spinner,setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
   const [coinVAl, setCoinVAL] = useState(<IonSpinner />)
@@ -70,15 +69,15 @@ function HomeScreen({ history }) {
       coin: coinVAl - 5
     })
   }
-  const doooc = useCallback(async () => {
+  const getDocumentFromFirebase = useCallback(async () => {
     const docum = doc(db, "users", id)
     const ref = await getDoc(docum)
     setCoinVAL(ref.data().coin)
     setCat(ref.data().categories)
   },[id])
   useEffect(() => {
-    doooc()
-  }, [id])
+    getDocumentFromFirebase()
+  }, [])
   const getQuestionsFromBackend = () =>{
     const email = localStorage.getItem("emailOfUser")
     const url = `http://backquery.online:1111/get-question-with-params?category=${currCategory}&level=${currLevel.toLowerCase()}&limit=${numb}&email=${email}`
@@ -130,6 +129,25 @@ const setCategory = useCallback((e)=>{
                     Profile
                   </IonLabel>
                 </IonItem>
+                <IonItem button>
+                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonLabel onClick={() => {
+                    history.push("/practice")
+                        localStorage.setItem("coins",100)
+                  }} >
+                    Practice
+                  </IonLabel>
+                </IonItem>
+                
+                <IonItem button>
+                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonLabel onClick={() =>{
+                    history.push("/coinsPage")
+                  }} >
+                    Coins History
+                  </IonLabel>
+                </IonItem>
+
               </IonMenuToggle>
             </IonList>
           </IonContent>

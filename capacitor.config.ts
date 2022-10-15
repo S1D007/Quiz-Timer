@@ -6,10 +6,14 @@ const config: CapacitorConfig = {
   webDir: 'build',
   bundledWebRuntime: false,
   server: {
-    "androidScheme": "http",
-    "allowNavigation": [
-      "http://backquery.online:1111"
-    ]
+    cleartext:true
+  },
+  plugins:{
+    GoogleAuth:{
+      scopes:["profile","email"],
+      serverClientId:"574074411601-1m9e7id3kj4lj0cr6ceqcfmjllr446l2.apps.googleusercontent.com",
+      forceCodeForRefreshToken:true
+    }
   }
 };
 

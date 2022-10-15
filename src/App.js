@@ -26,6 +26,7 @@ import Signup from './components/pages/Signup';
 import HomeScreen from './components/pages/HomeScreen';
 // import Home from './pages/Home';
 import Profile from './components/pages/Profile'
+import CoinsPage from './components/pages/CoinsPage'
 import UpdateProfile from './components/pages/UpdateProfile'
 import PracticeHome from "./components/pages/PracticeHome"
 import Quiz from './components/pages/Quiz'
@@ -42,6 +43,7 @@ const App = () => {
     <Route id={"home"} exact path={"/practice"} component={PracticeHome}  />
     <Route exact path={"/profile"} component={Profile}  />
     <Route exact path={"/quizScreen"} component={Quiz}  />
+    <Route exact path={"/coinsPage"} component={CoinsPage}  />
     <Route exact path={"/practiceQuiz"} component={PracticeQuiz}  />
     <Route exact path={"/updateProfile"} component={UpdateProfile}  />
 </IonApp>

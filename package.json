@@ -10,6 +10,7 @@
     "@capacitor/haptics": "4.0.1",
     "@capacitor/keyboard": "4.0.1",
     "@capacitor/status-bar": "4.0.1",
+    "@codetrix-studio/capacitor-google-auth": "^3.2.0",
     "@ionic-native/native-storage": "^5.36.0",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.2.5",

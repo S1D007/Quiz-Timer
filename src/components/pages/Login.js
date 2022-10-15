@@ -2,6 +2,7 @@ import { IonButton, IonInput, IonLabel, IonText, IonImg, IonPage, useIonLoading,
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Storage } from "@ionic/storage"
 import { app, db } from "../../config/firebase"
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Welcome from "../Images/welcome.gif"
@@ -14,6 +15,7 @@ function Login({ history }) {
     const [id, setID] = useState(undefined)
     const [present, dismiss] = useIonLoading();
     const auth = getAuth();
+
     const storage = new Storage();
     storage.create();
     const onLogin = () => {
@@ -50,43 +52,49 @@ function Login({ history }) {
         });
     }, [email])
 
-    const handleAuthGGL = () => {
-        signInWithPopup(auth, provider).then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            // The signed-in user info.
-            const email = result.user.email;
-            // ...
-            localStorage.setItem('emailOfUser', email);
-            // history.replace("/home")
-            const user = collection(db, "users")
-            const q = query(user, where("email", "==", email))
-            onSnapshot(q, (doc) => {
-                if (doc.docs.length === 0) {
-                    history.push("/profile")
-                } else {
-                    const q = query(user, where("email", "==", email))
-                    onSnapshot(q, (doc) => {
-                        localStorage.setItem("id", doc.docs[0].id)
-                    })
-                    setTimeout(() => {
-                        history.push("/home")
-                    }, 200);
-                }
-            });
+    // GoogleAuth.initialize({
+    //     clientId: '681014842672-nunlf25otle5lmd5ol3qjk1rat78jopf.apps.googleusercontent.com',
+    //     scopes: ['profile', 'email'],
+    // });
+    // const handleAuthGGL = async () => {
+    //     const result = await GoogleAuth.signIn();
+    //     alert(result.email)
+    //     signInWithPopup(auth, provider).then((result) => {
+    //         // This gives you a Google Access Token. You can use it to access the Google API.
+    //         const credential = GoogleAuthProvider.credentialFromResult(result);
+    //         const token = credential.accessToken;
+    //         // The signed-in user info.
+    //         const email = result.user.email;
+    //         // ...
+    //         localStorage.setItem('emailOfUser', email);
+    //         // history.replace("/home")
+    //         const user = collection(db, "users")
+    //         const q = query(user, where("email", "==", email))
+    //         onSnapshot(q, (doc) => {
+    //             if (doc.docs.length === 0) {
+    //                 history.push("/profile")
+    //             } else {
+    //                 const q = query(user, where("email", "==", email))
+    //                 onSnapshot(q, (doc) => {
+    //                     localStorage.setItem("id", doc.docs[0].id)
+    //                 })
+    //                 setTimeout(() => {
+    //                     history.push("/home")
+    //                 }, 200);
+    //             }
+    //         });
 
-        }).catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.customData.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
-        });
-    }
+    //     }).catch((error) => {
+    //         // Handle Errors here.
+    //         const errorCode = error.code;
+    //         const errorMessage = error.message;
+    //         // The email of the user's account used.
+    //         const email = error.customData.email;
+    //         // The AuthCredential type that was used.
+    //         const credential = GoogleAuthProvider.credentialFromError(error);
+    //         // ...
+    //     });
+    // }
 
     return (
         <IonPage style={{
@@ -126,14 +134,14 @@ function Login({ history }) {
                     </h4>
                 </IonText>
             </div>
-            <div style={{
+            {/* <div style={{
                 display: "flex",
                 justifyContent: "center"
             }} >
                 <IonButton onClick={handleAuthGGL} color={"tertiary"} size='large' >Login With <IonIcon style={{
                     paddingLeft: "10px"
                 }} size="large" icon={logoGoogle}></IonIcon></IonButton>
-            </div>
+            </div> */}
             <div style={{
             }} >
                 <div style={{
