@@ -1,6 +1,6 @@
 // import { questions } from './json/questions';
 import { IonApp, IonSpinner, IonIcon, IonImg, IonPage, useIonAlert, useIonToast } from '@ionic/react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import { alarmOutline } from "ionicons/icons"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
@@ -19,6 +19,8 @@ function Quiz({ history }) {
     const [questionNumbering, setQuestionNumbering] = useState([])
     const [countCoin, setCountCoin] = useState(<IonSpinner />)
     const [presentAlert] = useIonAlert();
+    const [coinValue, setCoinVaule] = useState(0)
+    console.log(coinValue)
     const [questionsFromBackend, setQuestionsFromBackend] = useState([])
     useEffect(() => {
         setQuestionsFromBackend(JSON.parse(localStorage.getItem("question")))
@@ -46,7 +48,7 @@ function Quiz({ history }) {
                 setBgAnswer("")
                 setSelected(false)
             };
-            if(stop === true){
+            if (stop === true) {
                 clearInterval(interval)
             }
         }, 1000);
@@ -139,80 +141,49 @@ function Quiz({ history }) {
     const userSelectedOption = (optionInArrayOfQuestions, indexNumber) => {
         setIndex(indexNumber);
         if (optionInArrayOfQuestions === questionsFromBackend[queCount].correctAnswer) {
-
             switch (counter) {
                 case 5:
+                    presentToast("Answered in 5 seconds", "success")
                     updateDoc(docRef, {
                         coin: (countCoin + 5 * 2)
                     })
-                    presentToast("Answered in 5 seconds", "success")
+                    setCoinVaule((e) => e + 5 * 2)
                     break;
                 case 4:
                     presentToast("Answered in 4 seconds", "success")
                     updateDoc(docRef, {
                         coin: (countCoin + 4 * 2)
                     })
+                    setCoinVaule((e) => e + 4 * 2)
                     break;
                 case 3:
                     presentToast("Answered in 3 seconds", "success")
                     updateDoc(docRef, {
                         coin: (countCoin + 3 * 2)
                     })
+                    setCoinVaule((e) => e + 3 * 2)
                     break;
                 case 2:
                     presentToast("Answered in 2 seconds", "success")
                     updateDoc(docRef, {
                         coin: (countCoin + 2 * 2)
                     })
+                    setCoinVaule((e) => e + 2 * 2)
                     break;
                 case 1:
                     presentToast("Answered in 1 seconds", "success")
                     updateDoc(docRef, {
                         coin: (countCoin + 1 * 2)
                     })
+                    setCoinVaule((e) => e + 1 * 2)
                     break;
                 case 0:
                     break;
                 default:
                     setCountCoin(countCoin)
-            }
-        } else {
-            switch (counter) {
-                case 5:
-                    presentToast(`Wrong Answer, '${5 * 2} points minus'`, "danger")
-                    updateDoc(docRef, {
-                        coin: (countCoin - 5 * 2)
-                    })
-                    break;
-                case 4:
-                    presentToast(`Wrong Answer, '${(4 * 2)}' points minus`, "danger")
-                    updateDoc(docRef, {
-                        coin: (countCoin - 4 * 2)
-                    })
-                    break;
-                case 3:
-                    presentToast(`Wrong Answer, '${3 * 2} points minus'`, "danger")
-                    updateDoc(docRef, {
-                        coin: (countCoin - 3 * 2)
-                    })
-                    break;
-                case 2:
-                    presentToast(`Wrong Answer, '${4 * 2} points minus'`, "danger")
-                    updateDoc(docRef, {
-                        coin: (countCoin - 2 * 2)
-                    })
-                    break;
-                case 1:
-                    presentToast(`Wrong Answer, '${5 * 2} points minus'`, "danger")
-                    updateDoc(docRef, {
-                        coin: (countCoin - 1 * 2)
-                    })
-                    break;
-                default:
-            }
+            }}
+        
         }
-
-    }
 
 
     // console.log(questionsFromBackend[6]?.question)
@@ -229,24 +200,29 @@ function Quiz({ history }) {
 
     useEffect(() => {
         if ((queCount).toString() === number) {
-            // setCounter(0)
             setStop(true)
             presentAlert({
                 header: 'Great! Well Done',
-                cssClass:"loader",
+                cssClass: "loader",
                 buttons: [
                     {
                         text: 'Go Back Home',
                         role: 'confirm',
-                        handler: () => {
-                            history.replace("/home")
-                        },
+                        handler: () => {history.replace("/home")
+                        const lastBalance = localStorage.getItem('coins')
+                        const email =  localStorage.getItem("emailOfUser")
+                        fetch(`http://backquery.online:1111/coin-history?coins=${coinValue}&lastBalance=${lastBalance}&email=${email}`).then((e)=>{
+                            console.log("Done")
+                        })
+                    }
+                        ,
                     }
                 ],
             })
         }
     }, [number, queCount, presentAlert, history])
-    return (" Something went wrong" && <IonPage style={{
+
+    return ("Something went wrong" && <IonPage style={{
         backgroundColor: "#0D1117",
     }} >
         <IonApp style={{

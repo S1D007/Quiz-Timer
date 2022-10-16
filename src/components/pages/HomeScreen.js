@@ -41,7 +41,7 @@ function HomeScreen({ history }) {
       }
     });
   });
-  const id = localStorage.getItem("id")
+    const id = localStorage.getItem("id")
   const docRef = doc(db, "users", id)
   const handdleClick = () =>{
     setSpinner(true)
@@ -66,7 +66,7 @@ function HomeScreen({ history }) {
   if(!loading){
     history.push("/quizScreen")
     updateDoc(docRef, {
-      coin: coinVAl - 5
+      coin: coinVAl
     })
   }
   const getDocumentFromFirebase = useCallback(async () => {
@@ -93,7 +93,12 @@ function HomeScreen({ history }) {
         alert(e)
     }
 }
-  localStorage.setItem("queNumber", numb)
+  useEffect(()=>{
+    localStorage.setItem("queNumber", numb)
+  },[numb])
+  useEffect(()=>{
+    localStorage.setItem("coins",coinVAl)
+  },[coinVAl])
   const minus = useCallback((e) => setNumber(numb - 1),[numb])
 const plus = useCallback((e) => setNumber(numb + 1),[numb])
 const setCategory = useCallback((e)=>{
@@ -190,12 +195,14 @@ const setCategory = useCallback((e)=>{
           top: "-10px",
           zIndex: -1
         }} >
-          <IonImg style={{
+          <IonImg  style={{
             width: "50px",
             marginLeft: "10px"
             // display:"inline-block",
           }} src={coin} />
-          <span style={{
+          <span  onClick={()=>{
+          console.log("Hi")
+        }} style={{
             // marginTop:"50px",
             marginRight: "15px",
             color: "#fff",
