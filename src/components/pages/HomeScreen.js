@@ -8,6 +8,7 @@ import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
 import { getAuth, signOut } from "firebase/auth";
+import { Storage } from '@ionic/storage';
 function HomeScreen({ history }) {
   const [spinner, setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
@@ -20,7 +21,8 @@ function HomeScreen({ history }) {
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
   const auth = getAuth();
-
+  const storage = new Storage();
+  storage.create();
   document.addEventListener('ionBackButton', (ev) => {
     ev.detail.register(-1, () => {
       if (!ionRouter.canGoBack()) {
@@ -181,10 +183,11 @@ function HomeScreen({ history }) {
                 <IonItem button>
                   <IonIcon slot="start" name='home'></IonIcon>
                   <IonLabel onClick={() => {
-                    signOut(auth).then(() => {
+                    signOut(auth).then(async () => {
                       // Sign-out successful.
                       history.replace("/login")
                       localStorage.clear()
+                      await storage.clear()
                     }).catch((error) => {
                       // An error happened.
                     });
