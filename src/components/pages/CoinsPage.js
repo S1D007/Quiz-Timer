@@ -3,6 +3,7 @@ import coin from "../Images/coin.png"
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import Back from "../Images/chevron-back-outline.svg"
+import { person,basketball } from "ionicons/icons"
 function CoinsPage({history}) {
     const [data,setData] = useState([])
     const [spin,setSpin] = useState(true)
@@ -28,7 +29,10 @@ function CoinsPage({history}) {
         backgroundColor: "#0D1117",
         color: "white"
             }}  >
-                <div>
+                <IonContent style={{
+        backgroundColor: "#0D1117",
+        color: "white"
+      }}>
                     <div>
                     <IonText>
 
@@ -78,7 +82,7 @@ function CoinsPage({history}) {
                         </div>
                         <div style={{
                             background: "#fff",
-                            height: "100vh",
+                            height: "100%",
                             width: "100%",
                             borderTopLeftRadius: "50px",
                             borderTopRightRadius: "50px",
@@ -108,7 +112,10 @@ function CoinsPage({history}) {
                                         background: "#fff",
                                         borderRadius: "20px",
                                         margin: "8px",
-                                        padding: "12px"
+                                        paddingTop: "8px",
+                                        paddingBottom: "8px",
+                                        paddingLeft: "18px",
+                                        paddingRight: "18px",
                                     }} >{coins}</h1>
                                 </div>
                                 <div style={{
@@ -124,7 +131,7 @@ function CoinsPage({history}) {
                             }
                         </div>
                     </div>
-                </div>
+                </IonContent>
             </IonApp>
         </IonPage>
     )

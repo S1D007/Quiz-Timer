@@ -28,8 +28,8 @@ function Login({ history }) {
         signInWithEmailAndPassword(auth, email, pass).then(() => {
             localStorage.setItem("emailOfUser", email)
             localStorage.setItem("practice", false)
-            storage.set("login", true)
-            storage.set("email", email)
+            localStorage.setItem("login", true)
+            localStorage.setItem("email", email)
             history.replace("/home");
         }).catch((e) => {
             alert(e.message)

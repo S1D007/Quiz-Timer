@@ -83,7 +83,7 @@ const OnBoarding = ({ history }) => {
     const storage = new Storage();
     storage.create();
     const onClickHanddler = async()=>{
-        await storage.set("OnBoardingEnded",true)
+        localStorage.setItem("OnBoardingEnded",true)
         history.replace("/login")
     }
     const [present, dismiss] = useIonLoading();
@@ -96,7 +96,7 @@ const OnBoarding = ({ history }) => {
             animated:true,
             cssClass:"loader",
           })
-        const check2 = await storage.get("login");
+        const check2 = localStorage.getItem("login")
         if (check2) {
             history.replace("/home")
         }

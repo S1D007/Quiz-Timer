@@ -1,21 +1,26 @@
-import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter,  IonSpinner } from '@ionic/react'
+import { IonApp, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonPage, IonSelect, IonSelectOption, useIonAlert, IonTitle, IonToolbar, useIonRouter, IonSpinner } from '@ionic/react'
 import { App } from '@capacitor/app';
-import React, {  useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import { menu } from "ionicons/icons"
+import { person, basketball, list, powerSharp } from "ionicons/icons"
 import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
+import { getAuth, signOut } from "firebase/auth";
 function HomeScreen({ history }) {
-  const [spinner,setSpinner] = useState(false)
+  const [spinner, setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
   const [coinVAl, setCoinVAL] = useState(<IonSpinner />)
   const [cat, setCat] = useState([])
-  const [loading,setLoading] = useState(true)
-  const [currCategory,setCurrCategory] = useState('')
-  const [currLevel,setLevel] = useState()
+  const [minusCoin, setMinusCoin] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [currCategory, setCurrCategory] = useState('')
+  const [currLevel, setLevel] = useState()
   const [presentAlert] = useIonAlert();
   const ionRouter = useIonRouter();
+  const auth = getAuth();
+
   document.addEventListener('ionBackButton', (ev) => {
     ev.detail.register(-1, () => {
       if (!ionRouter.canGoBack()) {
@@ -41,69 +46,81 @@ function HomeScreen({ history }) {
       }
     });
   });
-    const id = localStorage.getItem("id")
+  const id = localStorage.getItem("id")
   const docRef = doc(db, "users", id)
-  const handdleClick = () =>{
+  const handdleClick = () => {
     setSpinner(true)
     setLoading(true)
-    if(currCategory === "random") {
+    if (currCategory === "random") {
       const url = `http://backquery.online:1111/get-questions?limit=${numb}`
-      try{
+      try {
         axios.get(url).then(response => {
-          localStorage.setItem('question',JSON.stringify(response.data.data))
+          localStorage.setItem('question', JSON.stringify(response.data.data))
           console.log(response.data)
           setLoading(false)
-          }).catch((e)=>{
-            alert(e)
-          })
-    }catch(e){
+        }).catch((e) => {
+          alert(e)
+        })
+      } catch (e) {
         alert(e)
-    }
-    }else{
+      }
+    } else {
       getQuestionsFromBackend()
     }
   }
-  if(!loading){
+
+  if (!loading) {
     history.push("/quizScreen")
-    updateDoc(docRef, {
-      coin: coinVAl
-    })
+
+    if (currLevel === "Hard") {
+      updateDoc(docRef, {
+        coin: coinVAl - 15
+      })
+    } else if (currLevel === "Medium") {
+      updateDoc(docRef, {
+        coin: coinVAl - 10
+      })
+    } else if (currLevel === "Easy") {
+      updateDoc(docRef, {
+        coin: coinVAl - 5
+      })
+    }
   }
   const getDocumentFromFirebase = useCallback(async () => {
     const docum = doc(db, "users", id)
     const ref = await getDoc(docum)
     setCoinVAL(ref.data().coin)
     setCat(ref.data().categories)
-  },[id])
+  }, [id])
   useEffect(() => {
     getDocumentFromFirebase()
   }, [])
-  const getQuestionsFromBackend = () =>{
+  const getQuestionsFromBackend = () => {
     const email = localStorage.getItem("emailOfUser")
     const url = `http://backquery.online:1111/get-question-with-params?category=${currCategory}&level=${currLevel.toLowerCase()}&limit=${numb}&email=${email}`
-    try{
-        axios.get(url).then(response => {
-          localStorage.setItem('question',JSON.stringify(response.data))
-          console.log(response.data)
-          setLoading(false)
-          }).catch((e)=>{
-            alert(e)
-          })
-    }catch(e){
+    try {
+      axios.get(url).then(response => {
+        localStorage.setItem('question', JSON.stringify(response.data))
+        console.log(response.data)
+        setLoading(false)
+      }).catch((e) => {
         alert(e)
+      })
+    } catch (e) {
+      alert(e)
     }
-}
-  useEffect(()=>{
+  }
+  useEffect(() => {
     localStorage.setItem("queNumber", numb)
-  },[numb])
-  useEffect(()=>{
-    localStorage.setItem("coins",coinVAl)
-  },[coinVAl])
-  const minus = useCallback((e) => setNumber(numb - 1),[numb])
-const plus = useCallback((e) => setNumber(numb + 1),[numb])
-const setCategory = useCallback((e)=>{
-  setCurrCategory(e.detail.value)
-},[])
+  }, [numb])
+  useEffect(() => {
+    localStorage.setItem("coins", coinVAl)
+  }, [coinVAl])
+  const minus = useCallback((e) => setNumber(numb - 1), [numb])
+  const plus = useCallback((e) => setNumber(numb + 1), [numb])
+  const setCategory = useCallback((e) => {
+    setCurrCategory(e.detail.value)
+  }, [])
   return (
     <IonPage
       style={{
@@ -131,6 +148,9 @@ const setCategory = useCallback((e)=>{
                 <IonItem button>
                   <IonIcon slot="start" name='home'></IonIcon>
                   <IonLabel onClick={() => history.push("/updateProfile")} >
+                    <IonIcon icon={person} style={{
+                      paddingRight: "10px"
+                    }} ></IonIcon>
                     Profile
                   </IonLabel>
                 </IonItem>
@@ -138,18 +158,43 @@ const setCategory = useCallback((e)=>{
                   <IonIcon slot="start" name='home'></IonIcon>
                   <IonLabel onClick={() => {
                     history.push("/practice")
-                        localStorage.setItem("coins",100)
+                    localStorage.setItem("coins", 100)
                   }} >
+                    <IonIcon icon={basketball} style={{
+                      paddingRight: "10px"
+                    }} ></IonIcon>
                     Practice
                   </IonLabel>
                 </IonItem>
-                
+
                 <IonItem button>
                   <IonIcon slot="start" name='home'></IonIcon>
-                  <IonLabel onClick={() =>{
+                  <IonLabel onClick={() => {
                     history.push("/coinsPage")
                   }} >
+                    <IonIcon icon={list} style={{
+                      paddingRight: "10px"
+                    }} ></IonIcon>
                     Coins History
+                  </IonLabel>
+                </IonItem>
+                <IonItem button>
+                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonLabel onClick={() => {
+                    signOut(auth).then(() => {
+                      // Sign-out successful.
+                      history.replace("/login")
+                      localStorage.clear()
+                    }).catch((error) => {
+                      // An error happened.
+                    });
+                  }} >
+                    <IonIcon onClick={() => {
+
+                    }} icon={powerSharp} style={{
+                      paddingRight: "10px"
+                    }} ></IonIcon>
+                    Logout
                   </IonLabel>
                 </IonItem>
 
@@ -195,14 +240,14 @@ const setCategory = useCallback((e)=>{
           top: "-10px",
           zIndex: -1
         }} >
-          <IonImg  style={{
+          <IonImg style={{
             width: "50px",
             marginLeft: "10px"
             // display:"inline-block",
           }} src={coin} />
-          <span  onClick={()=>{
-          console.log("Hi")
-        }} style={{
+          <span onClick={() => {
+            console.log("Hi")
+          }} style={{
             // marginTop:"50px",
             marginRight: "15px",
             color: "#fff",
@@ -251,16 +296,16 @@ const setCategory = useCallback((e)=>{
               }} >
                 <IonItem>
                   <IonSelect interface="action-sheet" onIonChange={setCategory} placeholder="Choose a Category">
-              <IonSelectOption value= "random" >
-                Random
-              </IonSelectOption>
+                    <IonSelectOption value="random" >
+                      Random
+                    </IonSelectOption>
                     {
-            cat?.map((e)=>{
-              return <IonSelectOption key={e.id} value = {e.name} >
-                {e.name}
-              </IonSelectOption>
-            })
-          }
+                      cat?.map((e) => {
+                        return <IonSelectOption key={e.id} value={e.name} >
+                          {e.name}
+                        </IonSelectOption>
+                      })
+                    }
                   </IonSelect>
                 </IonItem>
               </IonList>
@@ -274,7 +319,7 @@ const setCategory = useCallback((e)=>{
 
               }} >
                 <IonItem >
-                  <IonSelect interface="action-sheet" placeholder="Level" onIonChange={(e)=>{
+                  <IonSelect interface="action-sheet" placeholder="Level" onIonChange={(e) => {
                     setLevel(e.detail.value)
                   }}
                   >
@@ -304,12 +349,12 @@ const setCategory = useCallback((e)=>{
               display: "flex",
               justifyContent: "center",
             }} >
-              <IonButton onClick={()=>handdleClick()
+              <IonButton onClick={() => handdleClick()
               } color={"success"} >
                 <h1 color='dark' style={{
                   margin: "50px",
                   color: "#000"
-                }} >{spinner?<IonSpinner/>:"Start"}</h1>
+                }} >{spinner ? <IonSpinner /> : "Start"}</h1>
               </IonButton>
             </div>
           </div>
