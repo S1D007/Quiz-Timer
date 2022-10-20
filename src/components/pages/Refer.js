@@ -3,6 +3,8 @@ import React from 'react'
 import share from "../Images/share.gif"
 import sharebtn from "../Images/sharebtn.gif"
 import { Share } from '@capacitor/share';
+import { Clipboard } from '@capacitor/clipboard';
+
 function Refer() {
     const name = localStorage.getItem("Name")
     const email = localStorage.getItem("emailOfUser")
@@ -51,11 +53,9 @@ function Refer() {
                         marginBottom: "-0.2px",
                         // backgroundColor:"#000"
                     }}  >Copy To Clipboard</p>
-                    <div onClick={() => {
-                        navigator.clipboard.writeText(code).then(() => {
-                            // Alert the user that the action took place.
-                            // Nobody likes hidden stuff being done under the hood!
-                            alert("Copied to clipboard");
+                    <div onClick={async () => {
+                        await Clipboard.write({
+                            string: code
                         });
                     }} style={{
                         display: "flex",

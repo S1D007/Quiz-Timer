@@ -1,4 +1,4 @@
-import { IonButton, IonInput, IonLabel, IonText, IonPage, IonList, IonItem, IonSelect, IonSelectOption, IonIcon, IonApp } from '@ionic/react'
+import { IonButton, IonInput, IonLabel, IonText, IonPage, IonList, IonItem, IonSelect, IonSelectOption, IonIcon, IonApp, IonChip } from '@ionic/react'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { getAuth, updatePassword } from "firebase/auth";
 import React, { useEffect, useState } from 'react'
@@ -15,15 +15,16 @@ function UpdateProfile({ history }) {
     phone: ""
   })
 
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState([])
 
-
+  const [categoryFromFirebase,setCategoryFromFirebase] = useState([])
   const id = localStorage.getItem("id")
   const docRef = doc(db, "users", id)
   useEffect(() => {
     const docRefe = doc(db, "users", id)
     getDoc(docRefe).then((e) => {
       setPlaceholderInfo({ ...placeholderInfo, name: e.data().name, phone: e.data().phone })
+      setCategoryFromFirebase(e.data().categories)
     })
     // console.log("This is UpdateProfile")
   }, [placeholderInfo, id])
@@ -119,12 +120,9 @@ function UpdateProfile({ history }) {
 
   const user = auth.currentUser;
 
-  updatePassword(user,).then(() => {
-    // Update successful.
-  }).catch((error) => {
-    // An error ocurred
-    // ...
-  });
+// console.log(categoryFromFirebase?.forEach((e)=>{
+//   return e.name
+// }))
 
 
   return (
@@ -157,21 +155,25 @@ function UpdateProfile({ history }) {
             fontSize: "20px",
             fontFamily: "sans-serif",
             color: "#fff",
-            marginTop: "-20px"
+            marginTop: "-45px"
           }} >Edit Profile</h3>
 
         </div>
-        <div>
+        {/* <div style={{
+          marginTop:"-20px"
+        }} >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,160L80,138.7C160,117,320,75,480,90.7C640,107,800,181,960,186.7C1120,192,1280,128,1360,96L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
-        </div>
+        </div> */}
         <div style={{
           backgroundColor: "#fff",
           height: "100vh",
-          marginTop: "-10px",
+          marginTop: "-20px",
           color: "#0d0d0d",
+          borderRadius:"40px",
+          padding:"1%"
         }} >
           <div style={{
-            paddingLeft: "25px"
+            padding:"20px"
           }} >
             <IonLabel>Name</IonLabel>
             <IonInput value={userInfo.name} onIonChange={(e) => {
@@ -258,6 +260,21 @@ function UpdateProfile({ history }) {
             }} color={"dark"} ><IonText color={"primary"} >Update Password</IonText></IonButton>
           </div>
           <div style={{
+            margin: "10px",
+            marginBottom:"-30px",
+            padding: "20px",
+            background:"#0d0d0d",
+            borderRadius:"40px"
+          }} >
+          {
+            categoryFromFirebase.map((e)=>{
+              return <IonChip color={"dark"} >
+                {e.name}
+              </IonChip>
+            })
+          }
+          </div>
+          <div style={{
             marginTop: "10px",
             padding: "30px"
           }} >
@@ -287,7 +304,9 @@ function UpdateProfile({ history }) {
                 </IonSelect>
               </IonItem>
             </IonList>
+            
           </div>
+          
         </div>
       </IonApp>
     </IonPage>

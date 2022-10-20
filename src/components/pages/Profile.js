@@ -99,13 +99,10 @@ const Profile = ({ history }) => {
   const onClickHanddler = async () => {
     if (code) {
       const emailOfRefer = atob(code)
-      const y = async () => {
-        const userRef = doc(db, "users", id)
-        await updateDoc(userRef, {
-          coin: 150
-        })
-      }
-      y()
+      const userRef = doc(db, "users", id)
+      await updateDoc(userRef, {
+        coin: 150
+      })
       //  const emailOfRefer = atob(code)
       const user = collection(db, "users")
       const qE = query(user, where("email", "==", emailOfRefer))
@@ -117,12 +114,12 @@ const Profile = ({ history }) => {
       })
       const docRef = doc(db, "users", referID)
       console.log(docRef)
+      fetch(`http://backquery.online:1111/coin-history?coins=50&lastBalance=${referCoin}&email=${emailOfRefer}`).then((e) => {
+      console.log("Done")
+    })
       await updateDoc(docRef, {
         coin: referCoin + 50
       })
-    //   fetch(`http://backquery.online:1111/coin-history?coins=50&lastBalance=${referCoin}&email=${emailOfRefer}`).then((e) => {
-    //   console.log("Done")
-    // })
     }
     
     try {
