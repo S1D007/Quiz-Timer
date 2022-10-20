@@ -30,6 +30,7 @@ import CoinsPage from './components/pages/CoinsPage'
 import UpdateProfile from './components/pages/UpdateProfile'
 import PracticeHome from "./components/pages/PracticeHome"
 import Quiz from './components/pages/Quiz'
+import Refer from './components/pages/Refer'
 import PracticeQuiz from "./components/pages/PracticeQuiz"
 setupIonicReact();
 const App = () => {
@@ -46,6 +47,8 @@ const App = () => {
     <Route exact path={"/coinsPage"} component={CoinsPage}  />
     <Route exact path={"/practiceQuiz"} component={PracticeQuiz}  />
     <Route exact path={"/updateProfile"} component={UpdateProfile}  />
+    <Route exact path={"/refer"} component={Refer}  />
+
 </IonApp>
   </IonReactRouter>
   )

@@ -1,9 +1,10 @@
-import { IonApp, IonButton,  IonImg, IonInput, IonItem, IonList,  IonPage,  IonSelect, IonSelectOption, useIonAlert, useIonRouter, IonSpinner } from '@ionic/react'
+import { IonApp, IonButton,  IonImg, IonInput, IonItem, IonList,  IonPage,  IonSelect, IonSelectOption, useIonAlert, useIonRouter, IonSpinner, IonIcon, IonText } from '@ionic/react'
 import { App } from '@capacitor/app';
 import React, {  useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import axios from "axios"
 import {category} from  "../category.js"
+import { arrowBack } from 'ionicons/icons';
 function PracticeHome({ history }) {
   const [spinner,setSpinner] = useState(false)
   const [numb, setNumber] = useState(1)
@@ -21,7 +22,7 @@ function PracticeHome({ history }) {
               text: 'No',
               role: 'cancel',
               handler: () => {
-                history.replace("/home")
+                history.go(-1)
               },
             },
             {
@@ -90,7 +91,22 @@ const setCategory = useCallback((e)=>{
         backgroundColor: "#0D1117",
         color: "white",
       }} >
+ <IonText>
 
+<h1 style={{
+    fontWeight: "bold",
+    margin: "5%",
+    fontSize: "2rem",
+    fontFamily: "sans-serif",
+    color: "white"
+
+}} ><IonIcon src={arrowBack}  onClick={() => {
+    history.go(-1)
+}} alt="Logo" style={{
+    display: "inline-block",
+    color: "white"
+}} /></h1>
+</IonText>
         
         <div style={{
           background: " linear-gradient(to right, #b993d6, #8ca6db)", /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -100,7 +116,7 @@ const setCategory = useCallback((e)=>{
           margin: "0 auto",
           // padding:"1%",
           borderRadius: "20px",
-          marginTop: "100px",
+          // marginTop: "4?0px",
           // borderBottomRightRadius: "20px",
           display: "flex",
           justifyContent: "center",

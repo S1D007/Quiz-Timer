@@ -3,7 +3,7 @@ import { App } from '@capacitor/app';
 import React, { useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import { menu } from "ionicons/icons"
-import { person, basketball, list, powerSharp } from "ionicons/icons"
+import { person, basketball, list, powerSharp,share } from "ionicons/icons"
 import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
@@ -19,6 +19,7 @@ function HomeScreen({ history }) {
   const [currCategory, setCurrCategory] = useState('')
   const [currLevel, setLevel] = useState()
   const [presentAlert] = useIonAlert();
+  const [disabled,setDisabled] = useState(false)
   const ionRouter = useIonRouter();
   const auth = getAuth();
   const storage = new Storage();
@@ -53,6 +54,7 @@ function HomeScreen({ history }) {
   const handdleClick = () => {
     setSpinner(true)
     setLoading(true)
+    setDisabled(true)
     if (currCategory === "random") {
       const url = `http://backquery.online:1111/get-questions?limit=${numb}`
       try {
@@ -78,14 +80,17 @@ function HomeScreen({ history }) {
       updateDoc(docRef, {
         coin: coinVAl - 15
       })
+      localStorage.setItem("coinsForHistory", coinVAl-15)
     } else if (currLevel === "Medium") {
       updateDoc(docRef, {
         coin: coinVAl - 10
       })
+      localStorage.setItem("coinsForHistory", coinVAl-10)
     } else if (currLevel === "Easy") {
       updateDoc(docRef, {
         coin: coinVAl - 5
       })
+      localStorage.setItem("coinsForHistory", coinVAl-5)
     }
   }
   const getDocumentFromFirebase = useCallback(async () => {
@@ -93,6 +98,7 @@ function HomeScreen({ history }) {
     const ref = await getDoc(docum)
     setCoinVAL(ref.data().coin)
     setCat(ref.data().categories)
+    localStorage.setItem("Name",ref.data().name)
   }, [id])
   useEffect(() => {
     getDocumentFromFirebase()
@@ -116,7 +122,7 @@ function HomeScreen({ history }) {
     localStorage.setItem("queNumber", numb)
   }, [numb])
   useEffect(() => {
-    localStorage.setItem("coins", coinVAl)
+    localStorage.setItem("coinsForHistory", coinVAl)
   }, [coinVAl])
   const minus = useCallback((e) => setNumber(numb - 1), [numb])
   const plus = useCallback((e) => setNumber(numb + 1), [numb])
@@ -178,6 +184,17 @@ function HomeScreen({ history }) {
                       paddingRight: "10px"
                     }} ></IonIcon>
                     Coins History
+                  </IonLabel>
+                </IonItem>
+                <IonItem button>
+                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonLabel onClick={() => {
+                    history.push("/refer")
+                  }} >
+                    <IonIcon icon={share} style={{
+                      paddingRight: "10px"
+                    }} ></IonIcon>
+                    Refer & Earn
                   </IonLabel>
                 </IonItem>
                 <IonItem button>
@@ -298,7 +315,7 @@ function HomeScreen({ history }) {
 
               }} >
                 <IonItem>
-                  <IonSelect interface="action-sheet" onIonChange={setCategory} placeholder="Choose a Category">
+                  <IonSelect disabled={disabled} interface="action-sheet" onIonChange={setCategory} placeholder="Choose a Category">
                     <IonSelectOption value="random" >
                       Random
                     </IonSelectOption>
@@ -322,7 +339,7 @@ function HomeScreen({ history }) {
 
               }} >
                 <IonItem >
-                  <IonSelect interface="action-sheet" placeholder="Level" onIonChange={(e) => {
+                  <IonSelect disabled={disabled} interface="action-sheet" placeholder="Level" onIonChange={(e) => {
                     setLevel(e.detail.value)
                   }}
                   >
@@ -340,11 +357,11 @@ function HomeScreen({ history }) {
             }} >
 
               {/* <h1>Numbers of Questions</h1> */}
-              <IonButton disabled={numb === 1 ? true : false} onClick={minus} color="danger" >-</IonButton>
+              <IonButton disabled={disabled || numb === 1 ? true : false} onClick={minus} color="danger" >-</IonButton>
               <IonInput type='number' style={{
                 marginTop: "-15px"
               }} value={numb} disabled={true} color="dark" />
-              <IonButton disabled={numb === 10 ? true : false} onClick={plus}
+              <IonButton disabled={disabled || numb === 10 ? true : false} onClick={plus}
                 color="success" >+</IonButton>
             </div>
             <div style={{

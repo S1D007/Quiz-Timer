@@ -209,7 +209,7 @@ function Quiz({ history }) {
                         text: 'Go Back Home',
                         role: 'confirm',
                         handler: () => {history.replace("/home")
-                        const lastBalance = localStorage.getItem('coins')
+                        const lastBalance = localStorage.getItem('coinsForHistory')
                         const email =  localStorage.getItem("emailOfUser")
                         fetch(`http://backquery.online:1111/coin-history?coins=${coinValue}&lastBalance=${lastBalance}&email=${email}`).then((e)=>{
                             console.log("Done")

@@ -3,52 +3,53 @@ import coin from "../Images/coin.png"
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import Back from "../Images/chevron-back-outline.svg"
-import { person,basketball } from "ionicons/icons"
-function CoinsPage({history}) {
-    const [data,setData] = useState([])
-    const [spin,setSpin] = useState(true)
-    const coins = localStorage.getItem('coins')
-    useEffect(()=>{
+import { person, basketball } from "ionicons/icons"
+function CoinsPage({ history }) {
+    const [data, setData] = useState([])
+    const [spin, setSpin] = useState(true)
+    const coins = localStorage.getItem('coinsForHistory')
+    useEffect(() => {
         const email = localStorage.getItem("emailOfUser")
         const url = `http://backquery.online:1111/coin-history-get?email=${email}`
-        axios.get(url).then((e)=>{
+        axios.get(url).then((e) => {
             console.log(e.data.data)
             setSpin(false)
             const dat = e.data.data.reverse()
-            setData(dat)  
+            setData(dat)
         })
-    },[])
+    }, [])
     console.log(data)
     return (
         <IonPage
-        style={{
-        backgroundColor: "#0D1117",
-        color: "white"
-      }}>
-            <IonApp  fullscreen={true} style={{
-        backgroundColor: "#0D1117",
-        color: "white"
+            style={{
+                backgroundColor: "#0D1117",
+                color: "white"
+            }}>
+            <IonApp fullscreen={true} style={{
+                backgroundColor: "#0D1117",
+                color: "white"
             }}  >
                 <IonContent style={{
-        backgroundColor: "#0D1117",
-        color: "white"
-      }}>
+                    backgroundColor: "#0D1117",
+                    color: "white"
+                }}>
                     <div>
-                    <IonText>
+                        <IonText>
 
-          <h1 style={{
-            fontWeight: "bold",
-            margin: "5%",
-            fontSize: "2rem",
-            fontFamily: "sans-serif",
-            color: "white"
-          }} ><IonIcon src={Back} onClick={() => {
-            history.replace("/home")
-          }} alt="Logo" style={{
-            display: "inline-block",
-            color: "white"
-          }} /></h1>
-        </IonText>
+                            <h1 style={{
+                                fontWeight: "bold",
+                                margin: "5%",
+                                fontSize: "2rem",
+                                fontFamily: "sans-serif",
+                                color: "white"
+
+                            }} ><IonIcon src={Back} color={"dark"} onClick={() => {
+                                history.replace("/home")
+                            }} alt="Logo" style={{
+                                display: "inline-block",
+                                color: "white"
+                            }} /></h1>
+                        </IonText>
                         <div style={{
                             background: " linear-gradient(to right, #b993d6, #8ca6db)", /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
                             width: "150px",
@@ -81,7 +82,7 @@ function CoinsPage({history}) {
                             }} >{coins}</span>
                         </div>
                         <div style={{
-                            background: "#fff",
+                            background: "#0d0d0d",
                             height: "100%",
                             width: "100%",
                             borderTopLeftRadius: "50px",
@@ -90,43 +91,43 @@ function CoinsPage({history}) {
                             padding: "3%",
 
                         }} >
-                        {spin === true?<IonSpinner color={"dark"}/>:""}
+                            {spin === true ? <IonSpinner color={"light"} /> : ""}
                             {
-                               data?.map(({coins,lastBalance})=>{
+                                data?.map(({ coins, lastBalance }) => {
                                     return <div style={{
-                                width: "100%",
-                                height: "80px",
-                                borderRadius: "20px",
-                                background: 'linear-gradient(to right, #eb3349, #f45c43)',
-                                display: "flex",
-                                justifyContent: "center",
-                                alignContent: "center",
-                                alignItems: "center",
-                                marginTop:"15px"
-                            }} >
-                                <div>
-                                    <h1 style={{
-                                        fontSize: "35px",
-                                        fontFamily: "monospace",
-                                        fontWeight: "bold",
-                                        background: "#fff",
+                                        width: "100%",
+                                        height: "80px",
                                         borderRadius: "20px",
-                                        margin: "8px",
-                                        paddingTop: "8px",
-                                        paddingBottom: "8px",
-                                        paddingLeft: "18px",
-                                        paddingRight: "18px",
-                                    }} >{coins}</h1>
-                                </div>
-                                <div style={{
-                                    display: "block"
-                                }} >
-                                    <h4 style={{
-                                        fontWeight: "bold",
-                                        color: "white"
-                                    }}>Last Balance: {lastBalance}</h4>
-                                </div>
-                            </div>
+                                        background: 'linear-gradient(to right, #eb3349, #f45c43)',
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignContent: "center",
+                                        alignItems: "center",
+                                        marginTop: "15px"
+                                    }} >
+                                        <div>
+                                            <h1 style={{
+                                                fontSize: "35px",
+                                                fontFamily: "monospace",
+                                                fontWeight: "bold",
+                                                background: "#fff",
+                                                borderRadius: "20px",
+                                                margin: "8px",
+                                                paddingTop: "8px",
+                                                paddingBottom: "8px",
+                                                paddingLeft: "18px",
+                                                paddingRight: "18px",
+                                            }} >{coins}</h1>
+                                        </div>
+                                        <div style={{
+                                            display: "block"
+                                        }} >
+                                            <h4 style={{
+                                                fontWeight: "bold",
+                                                color: "white"
+                                            }}>Last Balance: {lastBalance}</h4>
+                                        </div>
+                                    </div>
                                 })
                             }
                         </div>
