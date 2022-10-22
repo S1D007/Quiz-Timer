@@ -31,7 +31,8 @@ function CoinsPage({ history }) {
             }}  >
                 <IonContent style={{
                     backgroundColor: "#0D1117",
-                    color: "white"
+                    color: "white",
+
                 }}>
                     <div>
                         <IonText>
@@ -82,8 +83,7 @@ function CoinsPage({ history }) {
                             }} >{coins}</span>
                         </div>
                         <div style={{
-                            background: "#0d0d0d",
-                            height: "100%",
+                            background: "#0d0d0d",                height:"100vh",
                             width: "100%",
                             borderTopLeftRadius: "50px",
                             borderTopRightRadius: "50px",

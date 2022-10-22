@@ -268,7 +268,7 @@ function UpdateProfile({ history }) {
           }} >
           {
             categoryFromFirebase.map((e)=>{
-              return <IonChip color={"dark"} >
+              return <IonChip color={"light"} >
                 {e.name}
               </IonChip>
             })

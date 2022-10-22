@@ -4,7 +4,7 @@ import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWith
 // import LoginAnim from "../components/Images/loginGIF.gif";
 import Back from "../Images/chevron-back-outline.svg"
 import { Storage } from '@ionic/storage';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 export const EmailContext = createContext()
@@ -27,6 +27,18 @@ function Login({ history }) {
             storage.set("signup",true)
             localStorage.setItem("emailOfUser",email)
             storage.set("email",email)
+            addDoc(collection(db, 'users'), {
+                // categories: currentCategory,
+                email: email,
+                // phone: phone,
+                // name: name,
+                coin: 100,
+                // refer: code !== "" ? true : false,
+                // created: Timestamp.now()
+              })
+              fetch(`http://backquery.online:1111/coin-history?coins=${100}&lastBalance=$0&email=${email}`).then((e) => {
+                console.log("Done")
+              })
             history.replace("/profile")
         }).catch((e) => {
             alert(e.message)

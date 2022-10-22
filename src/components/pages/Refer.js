@@ -14,9 +14,8 @@ function Refer() {
     console.log(code)
     const handleClickShare = async () => {
         await Share.share({
-            title: `${name} is Inviting You to Install Quiz Timer `,
-            text: `Refer Code: ${code}`,
-            url: 'http://backquery.online:1111/',
+            title: `Quiz Timer`,
+            text: `${name} is Inviting You to Install Quiz Timer Refer Code: ${code}`,
             dialogTitle: 'Share with buddies',
         });
     }
@@ -55,8 +54,10 @@ function Refer() {
                     }}  >Copy To Clipboard</p>
                     <div onClick={async () => {
                         await Clipboard.write({
-                            string: code
-                        });
+                            string: code,
+                            label:"Copied"
+                        })
+                        alert("Copied to clipboard")
                     }} style={{
                         display: "flex",
                         justifyContent: "center"

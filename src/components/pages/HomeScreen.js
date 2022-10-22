@@ -3,7 +3,7 @@ import { App } from '@capacitor/app';
 import React, { useCallback, useEffect, useState } from 'react'
 import coin from "../Images/coin.png"
 import { menu } from "ionicons/icons"
-import { person, basketball, list, powerSharp,share } from "ionicons/icons"
+import { person, basketball, list, powerSharp, share } from "ionicons/icons"
 import axios from "axios"
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../config/firebase'
@@ -19,7 +19,7 @@ function HomeScreen({ history }) {
   const [currCategory, setCurrCategory] = useState('')
   const [currLevel, setLevel] = useState()
   const [presentAlert] = useIonAlert();
-  const [disabled,setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false)
   const ionRouter = useIonRouter();
   const auth = getAuth();
   const storage = new Storage();
@@ -80,17 +80,17 @@ function HomeScreen({ history }) {
       updateDoc(docRef, {
         coin: coinVAl - 15
       })
-      localStorage.setItem("coinsForHistory", coinVAl-15)
+      localStorage.setItem("coinsForHistory", coinVAl - 15)
     } else if (currLevel === "Medium") {
       updateDoc(docRef, {
         coin: coinVAl - 10
       })
-      localStorage.setItem("coinsForHistory", coinVAl-10)
+      localStorage.setItem("coinsForHistory", coinVAl - 10)
     } else if (currLevel === "Easy") {
       updateDoc(docRef, {
         coin: coinVAl - 5
       })
-      localStorage.setItem("coinsForHistory", coinVAl-5)
+      localStorage.setItem("coinsForHistory", coinVAl - 5)
     }
   }
   const getDocumentFromFirebase = useCallback(async () => {
@@ -98,7 +98,7 @@ function HomeScreen({ history }) {
     const ref = await getDoc(docum)
     setCoinVAL(ref.data().coin)
     setCat(ref.data().categories)
-    localStorage.setItem("Name",ref.data().name)
+    localStorage.setItem("Name", ref.data().name)
   }, [id])
   useEffect(() => {
     getDocumentFromFirebase()
@@ -129,6 +129,17 @@ function HomeScreen({ history }) {
   const setCategory = useCallback((e) => {
     setCurrCategory(e.detail.value)
   }, [])
+
+  // switch(coinVAl){
+  //   case 
+  // }
+
+  useEffect(() => {
+    if (coinVAl < 10) {
+      setDisabled(true)
+    }
+  }, [coinVAl])
+
   return (
     <IonPage
       style={{
@@ -369,7 +380,7 @@ function HomeScreen({ history }) {
               display: "flex",
               justifyContent: "center",
             }} >
-              <IonButton onClick={() => handdleClick()
+              <IonButton disabled={disabled} onClick={() => handdleClick()
               } color={"success"} >
                 <h1 color='dark' style={{
                   margin: "50px",

@@ -1,4 +1,4 @@
-import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg, IonApp } from '@ionic/react';
+import { IonIcon, IonInput, IonItem, IonPage, IonText, IonList, IonSelect, IonSelectOption, IonButton, IonImg, IonApp, IonSpinner } from '@ionic/react';
 import { call, man, mail, share } from "ionicons/icons"
 import React, { useEffect, useState, } from 'react'
 import ProfileImg from "../Images/profile.gif"
@@ -35,7 +35,7 @@ let category = [
     name: 'Geography',
   },
   {
-    id: 15,
+    id: 8,
     name: 'History',
   },
   {
@@ -87,30 +87,38 @@ const Profile = ({ history }) => {
   const [code, setCode] = useState("")
   const [referCoin, setReferCoin] = useState(0)
   const [referID, setReferID] = useState("")
+  const [load, setLoad] = useState(false)
   const [name, setName] = useState(null)
   localStorage.setItem("name", name)
   localStorage.setItem("phone", phone)
   const email = localStorage.getItem("emailOfUser")
 
   // console.log(emailOfRefer)
-
+useEffect(()=>{
+  if(code){
+    const emailOfRefer = atob(code)
+    const user = collection(db, "users")
+    const qE = query(user, where("email", "==", emailOfRefer))
+    onSnapshot(qE, (doc) => {
+      //  setReferID(doc.docs.id)
+      setReferID(doc.docs[0].id)
+      setReferCoin(doc.docs[0].data().coin)
+    })
+  }
+})
+console.log(referCoin,referID)
   const id = localStorage.getItem("id")
   // console.log(referID,referCoin)
   const onClickHanddler = async () => {
+    setLoad(true)
     if (code) {
       const emailOfRefer = atob(code)
       const userRef = doc(db, "users", id)
       await updateDoc(userRef, {
         coin: 150
       })
-      //  const emailOfRefer = atob(code)
-      const user = collection(db, "users")
-      const qE = query(user, where("email", "==", emailOfRefer))
-      onSnapshot(qE, (doc) => {
-        //  setReferID(doc.docs.id)
-        setReferID(doc.docs[0].id)
-        setReferCoin(doc.docs[0].data().coin)
-
+      fetch(`http://backquery.online:1111/coin-history?coins=50&lastBalance=${100}&email=${email}`).then((e) => {
+        console.log("Done")
       })
       const docRef = doc(db, "users", referID)
       console.log(docRef)
@@ -120,6 +128,7 @@ const Profile = ({ history }) => {
       await updateDoc(docRef, {
         coin: referCoin + 50
       })
+      
     }
     
     try {
@@ -298,7 +307,7 @@ const Profile = ({ history }) => {
             <h1 color='dark' style={{
               margin: "5%",
               padding: "50px"
-            }} >lets Go</h1>
+            }} >{load?<IonSpinner/>:"Let's Go"}</h1>
           </IonButton>
         </div>
       </IonApp>
