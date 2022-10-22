@@ -121,32 +121,28 @@ console.log(referCoin,referID)
         console.log("Done")
       })
       const docRef = doc(db, "users", referID)
+      await updateDoc(docRef, {
+        coin: referCoin + 50
+      })
       console.log(docRef)
       fetch(`http://backquery.online:1111/coin-history?coins=50&lastBalance=${referCoin}&email=${emailOfRefer}`).then((e) => {
       console.log("Done")
     })
-      await updateDoc(docRef, {
-        coin: referCoin + 50
-      })
-      
     }
     
     try {
-      await addDoc(collection(db, 'users'), {
+      const docRef = doc(db, "users", id)
+      await updateDoc(docRef, {
         categories: currentCategory,
         email: email,
         phone: phone,
         name: name,
-        coin: 100,
         refer: code !== "" ? true : false,
         created: Timestamp.now()
       })
-
-
     } catch (err) {
       alert(err)
     }
-
     history.replace("/login")
   }
   useEffect(() => {

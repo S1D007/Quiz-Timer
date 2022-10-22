@@ -165,7 +165,7 @@ function HomeScreen({ history }) {
               </IonListHeader>
               <IonMenuToggle auto-hide="false">
                 <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonIcon slot="" name='home'></IonIcon>
                   <IonLabel onClick={() => history.push("/updateProfile")} >
                     <IonIcon icon={person} style={{
                       paddingRight: "10px"
@@ -174,7 +174,7 @@ function HomeScreen({ history }) {
                   </IonLabel>
                 </IonItem>
                 <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonIcon slot="" name='home'></IonIcon>
                   <IonLabel onClick={() => {
                     history.push("/practice")
                     localStorage.setItem("coins", 100)
@@ -187,7 +187,7 @@ function HomeScreen({ history }) {
                 </IonItem>
 
                 <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonIcon slot="" name='home'></IonIcon>
                   <IonLabel onClick={() => {
                     history.push("/coinsPage")
                   }} >
@@ -198,7 +198,7 @@ function HomeScreen({ history }) {
                   </IonLabel>
                 </IonItem>
                 <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonIcon slot="" name='home'></IonIcon>
                   <IonLabel onClick={() => {
                     history.push("/refer")
                   }} >
@@ -209,7 +209,7 @@ function HomeScreen({ history }) {
                   </IonLabel>
                 </IonItem>
                 <IonItem button>
-                  <IonIcon slot="start" name='home'></IonIcon>
+                  <IonIcon slot="" name='home'></IonIcon>
                   <IonLabel onClick={() => {
                     signOut(auth).then(async () => {
                       // Sign-out successful.
